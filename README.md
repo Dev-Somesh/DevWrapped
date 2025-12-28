@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="https://capsule-render.vercel.app/render?type=soft&color=0d1117&height=300&section=header&text=◈%20DEV_WRAPPED&fontSize=80&animation=fadeIn&fontColor=ffffff" />
+  <img src="https://capsule-render.vercel.app/render?type=glitch&color=0d1117&height=300&section=header&text=DEV_WRAPPED&fontSize=80&animation=fadeIn&fontColor=39d353" />
 </p>
 
 <p align="center">
-  <kbd><b>INITIALIZING_SESSION...</b></kbd>
+  <kbd><b>[ SYSTEM_STATUS: OPERATIONAL ]</b></kbd>
 </p>
 
 <p align="center">
@@ -13,7 +13,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/INTELLIGENCE-GEMINI_3_FLASH-8E75FF?style=for-the-badge&logo=google-gemini&logoColor=white" />
   <img src="https://img.shields.io/badge/TELEMETRY-GITHUB_V3-39D353?style=for-the-badge&logo=github&logoColor=white" />
-  <img src="https://img.shields.io/badge/DESIGN-CINEMATIC_DARK-58a6ff?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/AESTHETIC-CINEMATIC_DARK-58a6ff?style=for-the-badge" />
 </p>
 
 ---
@@ -26,7 +26,7 @@
 ## ◒ SYSTEM MODULES
 
 ### ▣ Identity Reveal
-We don't just count commits; we detect patterns. 
+We don't just count commits; we detect patterns that define your professional DNA. 
 *   **The Night Owl**: Thriving in the 3 AM silence.
 *   **The Consistent Builder**: The anchor of the codebase.
 *   **The Polyglot Explorer**: Fluent across the tech landscape.
@@ -56,7 +56,7 @@ security_protocol:
 
 intelligence_core:
   model: gemini-3-flash-preview
-  provider: Google_Vertex_AI
+  provider: Google_GenAI_SDK
 ```
 
 ---
