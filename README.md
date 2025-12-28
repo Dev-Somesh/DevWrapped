@@ -19,68 +19,67 @@
 ---
 
 ## ◈ THE VISION
-**DevWrapped 2025** is an elite Year-in-Review engine that transforms raw GitHub activity into a cinematic narrative. We believe metrics without meaning are just noise. By combining **Google Gemini AI** with your real-world telemetry, we reveal the hidden developer archetype behind your commits.
+**DevWrapped 2025** is an elite Year-in-Review engine that transforms raw GitHub telemetry into a cinematic narrative. By combining **Google Gemini 3 Flash** with your real-world commit history, we reveal the hidden developer archetype behind your contributions.
 
 ---
 
-## ◒ SYSTEM MODULES
+## ◒ AUTHENTICATION PROTOCOLS
 
-### ▣ Identity Reveal
-We don't just count commits; we detect patterns that define your professional DNA. 
-*   **The Night Owl**: Thriving in the 3 AM silence.
-*   **The Consistent Builder**: The anchor of the codebase.
-*   **The Polyglot Explorer**: Fluent across the tech landscape.
+The system operates on two distinct authorization layers:
 
-### ▣ Cinematic Narrative
-Experience a multi-chapter reveal of your year, moving from **The Consistency** through **The Discipline** to your final **Archetype Reveal**.
+### 1. The Session Key (BYOK)
+For maximum privacy and scalability, users can authorize a volatile session using their own Google Cloud Project. 
+- **Flow**: Click "Select API Key" -> Authenticate with Google -> Choose Project.
+- **Requirement**: A Google Cloud project with the Gemini API enabled (Paid billing required).
+- **Security**: Keys are never stored; they exist only in memory during the analysis trace.
 
-### ▣ The Intelligence Dossier
-Export a comprehensive, professional-grade analysis of your technical DNA. A long-form artifact designed for your personal archives or professional portfolio.
+### 2. The Global Key (Developer Deployment)
+If you are hosting this for a specific team or audience and wish to provide the AI credits:
+- Set `API_KEY` in your hosting environment (e.g., Netlify/Vercel Environment Variables).
+- The system will detect this key and bypass the "Authorize Session" screen for all users.
 
 ---
 
 ## ⚙︎ ARCHITECTURAL TRACE
 
 ```yaml
-design_language:
-  theme: GitHub_High_Contrast_Dark
-  typography: 
-    - Space Grotesk (Display)
-    - JetBrains Mono (Technical)
-  aesthetic: Glassmorphism / Cinematic Editorial
-
-security_protocol:
-  retention: ZERO_STORAGE
-  encryption: AES-256-GCM (Session Volatile)
-  processing: Client-Side Only
-
 intelligence_core:
   model: gemini-3-flash-preview
-  provider: Google_GenAI_SDK
+  role: Narrative Reasoning & Pattern Extraction
+  parameters: JSON_SCHEMA_STRICT
+
+telemetry_engine:
+  provider: GitHub REST API v3
+  data_points: Commits, Language Ratios, Streak Momentum, Seasonality
+
+frontend_stack:
+  ui: React 19 + Tailwind CSS
+  font_display: Space Grotesk
+  font_technical: JetBrains Mono
+  export_engine: html-to-image (4K Buffer)
 ```
 
 ---
 
 ## ▣ THE PRIVACY VAULT
-In an era of data harvesting, **DevWrapped** stands as a beacon of transparency. 
+In an era of data harvesting, **DevWrapped** follows a zero-retention policy:
 - **NO** database connections.
 - **NO** tracking cookies.
-- **NO** persistent storage.
-- **VOLATILE_AUTH**: Your tokens are used in memory and purged instantly.
+- **VOLATILE_AUTH**: Tokens are purged instantly upon session close.
+- **CLIENT_SIDE**: All GitHub data processing happens in your browser.
 
 ---
 
-## ◈ EXPORT ARTIFACTS
-The system generates high-fidelity PNG artifacts optimized for:
-- **LinkedIn**: Thoughtful, pattern-driven hooks.
-- **X (Twitter)**: Minimalist, high-impact statements.
-- **Instagram**: Identity-focused, aesthetic mystery.
+## ◈ SUPPORT & FEEDBACK
+If the intelligence core encounters a trace failure or you have feedback on the narrative logic:
+- **Direct Support**: [hello@someshbhardwaj.me](mailto:hello@someshbhardwaj.me)
+- **Portfolio**: [someshbhardwaj.me](https://someshbhardwaj.me)
 
 ---
 
 <p align="center">
   <br />
-  <b>ENGINEERED BY <a href="https://someshbhardwaj.me">SOMESH BHARDWAJ</a></b><br />
+  <b>ARCHITECTED BY <a href="https://someshbhardwaj.me">SOMESH BHARDWAJ</a></b><br />
   <span style="opacity: 0.3; font-family: monospace; font-size: 10px; letter-spacing: 5px;">*** END_OF_MANIFEST_2025 ***</span>
 </p>
 

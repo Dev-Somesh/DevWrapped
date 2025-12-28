@@ -3,30 +3,30 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { GitHubStats, AIInsights } from "../types";
 
 export const generateAIWrapped = async (stats: GitHubStats): Promise<AIInsights> => {
-  // We create a fresh instance to ensure it picks up whichever key is active in the environment
+  // Always create a new instance inside the call to ensure the latest API key is used
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const prompt = `
-    Analyze this developer's 2024-2025 GitHub activity. Create an artistic, cinematic "Year Wrapped" story.
+    Analyze this developer's 2024-2025 GitHub activity. Create a cinematic "Year Wrapped" narrative.
     
-    DEVELOPER CONTEXT:
+    DEVELOPER TELEMETRY:
     - User: ${stats.username}
-    - Commits: ${stats.totalCommits}
-    - Engagement: ${stats.activeDays} days active
-    - Languages: ${stats.topLanguages.map(l => l.name).join(', ')}
+    - Contributions: ${stats.totalCommits}
+    - Active Span: ${stats.activeDays} days
+    - Focus Stack: ${stats.topLanguages.map(l => l.name).join(', ')}
     - Scope: ${stats.reposContributed} repositories
-    - Discipline: ${stats.streak} day streak
-    - Seasonality: Most active in ${stats.mostActiveMonth}
+    - Momentum: ${stats.streak} day streak
+    - Seasonality: Peak work in ${stats.mostActiveMonth}
     
-    RESPONSE ARCHITECTURE (JSON ONLY):
-    1. archetype: A high-impact title (e.g., The Midnight Architect).
+    OUTPUT SCHEMA (JSON ONLY):
+    1. archetype: A bold developer persona (e.g., The Midnight Architect).
     2. archetypeDescription: A poetic 1-sentence definition.
-    3. insights: 3 specific behavioral observations based on their tech/activity.
+    3. insights: 3 specific behavioral traces from their code activity.
     4. patterns: 2 high-level development rhythms detected.
-    5. narrative: A 3-paragraph cinematic summary of their growth.
-    6. cardInsight: A punchy, sharable 1-line quote (max 10 words).
+    5. narrative: A 3-paragraph cinematic story of their journey.
+    6. cardInsight: A punchy 10-word quote for social sharing.
     
-    TONE: Professional, sophisticated, narrative-driven.
+    TONE: Professional, sophisticated, narrative-first.
   `;
 
   try {
@@ -54,6 +54,7 @@ export const generateAIWrapped = async (stats: GitHubStats): Promise<AIInsights>
     return JSON.parse(response.text);
   } catch (error: any) {
     console.error("Gemini Core Error:", error);
-    throw new Error(error.message || "Failed to generate AI insights. Verify your API key status.");
+    // Bubble up a clear message for the UI to handle key reset
+    throw new Error(error.message || "Session invalid. Please verify your API key.");
   }
 };

@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Step, GitHubStats, AIInsights } from './types';
 import { fetchGitHubData } from './services/githubService';
@@ -53,16 +52,24 @@ const BackgroundIcons: React.FC = () => {
 };
 
 const ApiKeyGuard: React.FC<{ onAuthorized: () => void }> = ({ onAuthorized }) => {
+  const [loading, setLoading] = useState(false);
+
   const handleSelectKey = async () => {
+    setLoading(true);
     // @ts-ignore
     if (window.aistudio) {
       try {
         // @ts-ignore
         await window.aistudio.openSelectKey();
+        // RULE: Assume selection was successful and proceed to avoid race conditions
         onAuthorized();
       } catch (err) {
-        console.error("Key selection failed", err);
+        console.error("Key selection UI failed to open", err);
+        setLoading(false);
       }
+    } else {
+      // If window.aistudio is not found, we assume the environment key is provided
+      onAuthorized();
     }
   };
 
@@ -73,42 +80,39 @@ const ApiKeyGuard: React.FC<{ onAuthorized: () => void }> = ({ onAuthorized }) =
         <div className="space-y-8 relative z-10">
           <div className="flex items-center gap-4">
              <div className="w-2 h-2 rounded-full bg-[#39d353] animate-pulse"></div>
-             <h3 className="text-[11px] font-mono uppercase tracking-[0.5em] text-[#8b949e] font-black">Authentication_Request</h3>
+             <h3 className="text-[11px] font-mono uppercase tracking-[0.5em] text-[#8b949e] font-black">Auth_Initialization</h3>
           </div>
           
           <div className="space-y-4">
-            <h2 className="text-4xl font-display font-black text-white tracking-tighter leading-tight">Initialize AI Core.</h2>
+            <h2 className="text-4xl font-display font-black text-white tracking-tighter leading-tight">Authorize AI Session.</h2>
             <p className="text-[#8b949e] text-base font-light leading-relaxed">
-              This application uses <strong>Gemini 3 Flash</strong> to interpret your GitHub telemetry. To proceed, authorize a session via your Google Cloud account.
+              DevWrapped uses <strong>Gemini 3 Flash</strong> for narrative intelligence. Please authorize using a key from a paid Google Cloud project.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-[#0d1117] border border-white/5 p-5 rounded-2xl">
-              <p className="text-[9px] font-mono text-white/40 uppercase tracking-widest mb-3">Model_Requirement</p>
+              <p className="text-[9px] font-mono text-white/40 uppercase tracking-widest mb-3">System_Core</p>
               <p className="text-[11px] font-mono text-[#f0f6fc]">Gemini 3 Flash</p>
-              <p className="text-[9px] font-mono text-[#8b949e] mt-1 italic">Optimized for Narrative Logic</p>
             </div>
             <div className="bg-[#0d1117] border border-white/5 p-5 rounded-2xl">
-              <p className="text-[9px] font-mono text-white/40 uppercase tracking-widest mb-3">Billing_Status</p>
-              <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-[11px] font-mono text-[#58a6ff] hover:underline">Requires Paid Project ↗</a>
-              <p className="text-[9px] font-mono text-[#8b949e] mt-1 italic">BYO-Key Architecture</p>
+              <p className="text-[9px] font-mono text-white/40 uppercase tracking-widest mb-3">Requirement</p>
+              <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-[11px] font-mono text-[#58a6ff] hover:underline">Paid Billing ↗</a>
             </div>
-          </div>
-
-          <div className="p-5 bg-white/5 border border-white/5 rounded-2xl">
-             <p className="text-[10px] font-mono text-[#8b949e] leading-relaxed">
-               <span className="text-white font-black pr-2">NOTE:</span> If you are the developer, you can skip this for all users by setting <code>API_KEY</code> in your Netlify Environment Variables.
-             </p>
           </div>
 
           <button 
             onClick={handleSelectKey}
-            className="w-full bg-[#f0f6fc] text-[#0d1117] font-black py-6 rounded-2xl hover:bg-white transition-all shadow-xl text-lg tracking-tighter flex items-center justify-center gap-3 group"
+            disabled={loading}
+            className={`w-full bg-[#f0f6fc] text-[#0d1117] font-black py-6 rounded-2xl hover:bg-white transition-all shadow-xl text-lg tracking-tighter flex items-center justify-center gap-3 group ${loading ? 'opacity-50 cursor-wait' : ''}`}
           >
-            SELECT API KEY
+            {loading ? 'OPENING...' : 'SELECT API KEY'}
             <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5Z"></path></svg>
           </button>
+
+          <p className="text-center text-[10px] font-mono text-[#484f58] uppercase tracking-widest">
+            Session keys are volatile & never stored.
+          </p>
         </div>
       </div>
     </div>
@@ -136,7 +140,7 @@ const App: React.FC = () => {
   }, []);
 
   const startAnalysis = async (user: string, token?: string) => {
-    // Ensure auth is cleared if we start
+    // Re-check auth if needed
     // @ts-ignore
     if (!isAuthorized && window.aistudio) {
       // @ts-ignore
@@ -158,11 +162,12 @@ const App: React.FC = () => {
       setTimeout(() => setStep(Step.Stats), 3500);
     } catch (err: any) {
       console.error(err);
-      if (err.message && (err.message.includes("API_KEY") || err.message.includes("404") || err.message.includes("key"))) {
+      // Detailed error handling for missing/invalid keys or system failures
+      if (err.message && (err.message.includes("API_KEY") || err.message.includes("404") || err.message.includes("key") || err.message.includes("not found"))) {
         setIsAuthorized(false);
-        setError("API Session Failed. Please select a valid key from a paid Google Cloud project.");
+        setError("AI Session Authorization Failed. Please select a valid key. Contact hello@someshbhardwaj.me if the issue persists.");
       } else {
-        setError(err.message || 'Analysis failed. Verify your GitHub username.');
+        setError(`${err.message || 'System error'}. Please report this to hello@someshbhardwaj.me`);
       }
       setStep(Step.Entry);
     }
@@ -200,7 +205,9 @@ const App: React.FC = () => {
     <div className={`min-h-screen bg-[#0d1117] text-[#c9d1d9] flex flex-col relative transition-colors duration-1000 ${step === Step.Share ? 'overflow-y-auto' : 'overflow-hidden'}`}>
       <BackgroundIcons />
       
-      {!isAuthorized && step === Step.Entry && <ApiKeyGuard onAuthorized={() => setIsAuthorized(true)} />}
+      {!isAuthorized && step === Step.Entry && (
+        <ApiKeyGuard onAuthorized={() => setIsAuthorized(true)} />
+      )}
 
       <main className="flex-1 w-full max-w-5xl px-6 mx-auto z-10 flex flex-col items-center justify-center min-h-[calc(100vh-80px)] relative">
         {renderStep()}
@@ -210,10 +217,10 @@ const App: React.FC = () => {
         <div className="flex items-center gap-4">
           <span className="text-[#39d353] font-black tracking-widest">DEVWRAPPED_2025</span>
           <span className="opacity-30">|</span>
-          <span className="text-white/40">Architected by Somesh Bhardwaj</span>
+          <span className="text-white/40">Engineered by Somesh Bhardwaj</span>
         </div>
         <div className="flex items-center gap-6 mt-4 md:mt-0">
-          <span className="text-[#58a6ff] font-black uppercase tracking-widest opacity-60">Intelligence: Gemini 3 Flash</span>
+          <span className="text-[#58a6ff] font-black uppercase tracking-widest opacity-60">Model: Gemini 3 Flash</span>
         </div>
       </footer>
     </div>
