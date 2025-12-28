@@ -12,25 +12,36 @@ export const fetchGitHubData = async (username: string, token?: string): Promise
   const fetchWithAuth = async (url: string) => {
     const res = await fetch(url, { headers });
     if (!res.ok) {
-      if (res.status === 401) throw new Error('Invalid GitHub Token');
-      if (res.status === 403) throw new Error('GitHub API rate limit exceeded. Try adding a Personal Access Token.');
-      if (res.status === 404) throw new Error('User not found');
-      throw new Error(`GitHub API Error: ${res.statusText}`);
+      // Robust Error Reporting based on status codes
+      if (res.status === 401) {
+        throw new Error('GITHUB_AUTH_INVALID: The provided Personal Access Token is unauthorized or has expired.');
+      }
+      if (res.status === 403) {
+        const rateLimitRemaining = res.headers.get('x-ratelimit-remaining');
+        if (rateLimitRemaining === '0') {
+          throw new Error('GITHUB_RATE_LIMIT: API quota exceeded. Please use a Personal Access Token to increase your limits.');
+        }
+        throw new Error('GITHUB_FORBIDDEN: Access denied. This may be due to repository privacy restrictions.');
+      }
+      if (res.status === 404) {
+        throw new Error(`GITHUB_USER_NOT_FOUND: The user profile "${username}" does not exist.`);
+      }
+      if (res.status >= 500) {
+        throw new Error('GITHUB_SERVER_OFFLINE: GitHub services are currently experiencing high latency or downtime.');
+      }
+      throw new Error(`GITHUB_CORE_ERROR: Received status ${res.status} from telemetry source.`);
     }
     return res.json();
   };
 
   try {
-    // 1. Get Basic User Info
     const userData = await fetchWithAuth(`https://api.github.com/users/${username}`);
     
-    // 2. Get Total Commits for the Year
     const commitSearch = await fetchWithAuth(
       `https://api.github.com/search/commits?q=author:${username}+committer-date:>=2024-01-01&per_page=1`
     );
     const totalCommits = commitSearch.total_count || 0;
 
-    // 3. Get Repos for Language Analysis and Listing
     const reposData = await fetchWithAuth(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
     
     const langMap: Record<string, number> = {};
@@ -53,7 +64,6 @@ export const fetchGitHubData = async (username: string, token?: string): Promise
       .sort((a, b) => b.count - a.count)
       .slice(0, 3);
 
-    // 4. Get Events for Streak/Patterns
     const events = await fetchWithAuth(`https://api.github.com/users/${username}/events?per_page=100`);
 
     const activeDaysSet = new Set<string>();
@@ -105,8 +115,8 @@ export const fetchGitHubData = async (username: string, token?: string): Promise
       lastActivity: dates[0] || new Date().toISOString().split('T')[0],
       activityPattern
     };
-  } catch (error) {
-    console.error("Error fetching GitHub data:", error);
+  } catch (error: any) {
+    console.error("GitHub Telemetry Fault:", error);
     throw error;
   }
 };

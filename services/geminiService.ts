@@ -3,7 +3,6 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { GitHubStats, AIInsights } from "../types";
 
 export const generateAIWrapped = async (stats: GitHubStats, modelName: string = "gemini-3-flash-preview"): Promise<AIInsights> => {
-  // Always create a new instance inside the call to ensure the latest API key is used
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const prompt = `
@@ -19,7 +18,7 @@ export const generateAIWrapped = async (stats: GitHubStats, modelName: string = 
     - Seasonality: Peak work in ${stats.mostActiveMonth}
     
     OUTPUT SCHEMA (JSON ONLY):
-    1. archetype: A bold developer persona (e.g., The Midnight Architect).
+    1. archetype: A bold developer persona.
     2. archetypeDescription: A poetic 1-sentence definition.
     3. insights: 3 specific behavioral traces from their code activity.
     4. patterns: 2 high-level development rhythms detected.
@@ -50,10 +49,25 @@ export const generateAIWrapped = async (stats: GitHubStats, modelName: string = 
       }
     });
 
-    if (!response.text) throw new Error("AI core returned empty trace");
+    if (!response.text) {
+      throw new Error("GEMINI_NULL_TRACE: The intelligence core returned an empty narrative.");
+    }
+    
     return JSON.parse(response.text);
   } catch (error: any) {
-    console.error("Gemini Core Error:", error);
-    throw new Error(error.message || "Session invalid. Please verify your API key and selected model.");
+    // Advanced error classification for Gemini
+    const errorMessage = error.message || "";
+    
+    if (errorMessage.includes("API_KEY_INVALID") || errorMessage.includes("key")) {
+      throw new Error("GEMINI_AUTH_INVALID: The provided API Key is unauthorized. Please verify your session key.");
+    }
+    if (errorMessage.includes("429") || errorMessage.includes("QUOTA")) {
+      throw new Error("GEMINI_RATE_LIMIT: Model quota exceeded. Please wait a few seconds before retrying.");
+    }
+    if (errorMessage.includes("SAFETY")) {
+      throw new Error("GEMINI_SAFETY_BLOCK: The intelligence core filtered this user's profile content for safety.");
+    }
+    
+    throw new Error(`GEMINI_INTERNAL_ERROR: ${errorMessage || 'Session failed to initialize.'}`);
   }
 };

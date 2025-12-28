@@ -3,6 +3,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Step, GitHubStats, AIInsights } from './types';
 import { fetchGitHubData } from './services/githubService';
 import { generateAIWrapped } from './services/geminiService';
+import { logDiagnosticData } from './services/security';
 import Landing from './components/Landing';
 import Loading from './components/Loading';
 import StatsSlide from './components/StatsSlide';
@@ -169,12 +170,16 @@ const App: React.FC = () => {
       
       setTimeout(() => setStep(Step.Stats), 3500);
     } catch (err: any) {
-      console.error(err);
-      if (err.message && (err.message.includes("API_KEY") || err.message.includes("404") || err.message.includes("key") || err.message.includes("not found"))) {
+      // Detailed Diagnostic Logging
+      logDiagnosticData(err, { username: user, step: Step[step], model: activeModel });
+      
+      if (err.message && (err.message.includes("AUTH") || err.message.includes("key") || err.message.includes("401"))) {
         setIsAuthorized(false);
-        setError("AI Session Authorization Failed. Please select a valid key. Contact hello@someshbhardwaj.me if the issue persists.");
+        setError("AUTHENTICATION_FAILED: Intelligence session invalid. Please authorize a new key.");
+      } else if (err.message && (err.message.includes("RATE_LIMIT") || err.message.includes("429"))) {
+        setError("RESOURCE_EXHAUSTED: Service quota reached. Please try again in a moment.");
       } else {
-        setError(`${err.message || 'System error'}. Please report this to hello@someshbhardwaj.me`);
+        setError(err.message || 'SYSTEM_FAILURE: Failed to interpret developer telemetry.');
       }
       setStep(Step.Entry);
     }

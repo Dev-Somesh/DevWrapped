@@ -2,6 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 import { GitHubStats, AIInsights } from '../types';
+import { generateSecureTraceId } from '../services/security';
 
 type AspectRatio = '1:1' | '4:5' | '9:16';
 
@@ -25,6 +26,11 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>('4:5');
   const [scale, setScale] = useState(1);
   const [activeHook, setActiveHook] = useState(0);
+  const [traceId, setTraceId] = useState('FETCHING...');
+
+  useEffect(() => {
+    generateSecureTraceId(stats.username).then(setTraceId);
+  }, [stats.username]);
 
   const hooks = [
     { type: 'Pattern Reveal', text: 'Turns out my coding style has a pattern.\n\nThis year taught me more about how I work than how much I shipped.\n\nHere’s my developer year in review 👇' },
@@ -121,7 +127,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
       <div className="w-full max-w-7xl px-4 flex justify-between items-end mb-6">
         <div className="flex flex-col gap-1">
           <span className="text-[10px] font-mono font-black text-[#39d353] tracking-[0.4em] uppercase">Status: Artifact_Finalized</span>
-          <h2 className="text-[10px] font-mono font-bold text-white/20 tracking-[0.5em] uppercase">SYSTEM_TRACE_KEY: {Math.random().toString(36).substring(7).toUpperCase()}</h2>
+          <h2 className="text-[10px] font-mono font-bold text-white/20 tracking-[0.5em] uppercase">SECURE_TRACE_ID: {traceId}</h2>
         </div>
       </div>
       
@@ -160,7 +166,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               style={{ ...ratioStyles[aspectRatio] }}
             >
               <div className="absolute top-0 right-0 p-8 opacity-5 font-mono text-[8px] tracking-[0.4em] uppercase rotate-90 origin-top-right whitespace-nowrap select-none">
-                ARTIFACT_VERIFIED_2025
+                ARTIFACT_VERIFIED_{traceId}
               </div>
 
               {/* Header */}
