@@ -3,43 +3,30 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { GitHubStats, AIInsights } from "../types";
 
 export const generateAIWrapped = async (stats: GitHubStats): Promise<AIInsights> => {
+  // Always create instance inside the call to ensure latest API_KEY from environment is used
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const prompt = `
     Analyze this developer's GitHub activity for their "Year Wrapped" story.
     
-    DATA:
-    Username: ${stats.username}
-    Total Commits: ${stats.totalCommits}
-    Active Days: ${stats.activeDays}
-    Top Languages: ${stats.topLanguages.map(l => l.name).join(', ')}
-    Repos Contributed: ${stats.reposContributed}
-    Longest Streak: ${stats.streak} days
-    Most Active Month: ${stats.mostActiveMonth}
-    Activity Pattern: ${stats.activityPattern}
+    USER DATA:
+    - Username: ${stats.username}
+    - Total Commits: ${stats.totalCommits}
+    - Active Days: ${stats.activeDays}
+    - Top Languages: ${stats.topLanguages.map(l => l.name).join(', ')}
+    - Repo Count: ${stats.reposContributed}
+    - Streak: ${stats.streak} days
+    - Peak Month: ${stats.mostActiveMonth}
     
-    CRITICAL RULES:
-    1. Archetype selection MUST be one of these exactly:
-       - The Consistent Builder (Regular commits, low variance, reliable)
-       - The Adventurous Sprinter (Intense bursts, many repos touched)
-       - The Focused Specialist (Deep work in few repos, top language >70%)
-       - The Polyglot Explorer (≥5 languages with meaningful commits)
-       - The Quiet Optimizer (Few commits, high impact, maintains systems)
-       - The Night Owl Coder (>50% commits between 9pm–3am)
-       - The Early Bird Creator (>50% commits between 6am–11am)
-       - The Momentum Chaser (Stronger finish in last 3 months)
-       - The Experimental Tinkerer (Many small repos, short activity spans)
-       - The Comeback Coder (Long 60-day gap followed by a strong streak)
-       - The Framework Crafter (React/Vue/Next/Django dominance)
-       - The Silent Maintainer (Oldest repo still active, steady ownership)
-
-    2. Insights MUST feel inferred and observant. Never say "because the data shows".
-    3. Use behavioral verbs: "tends to", "seems to", "thrives when", "often".
-    4. Archetype Description: 1 sentence, human-centric, positive.
-    5. Card Insight: Exactly ONE reflective sentence for the final share card.
-    6. Insights array: 3 behavior-based observations.
+    REQUIREMENTS:
+    1. Select a compelling Archetype (e.g., The Architect, The Polisher, The Sprinter).
+    2. Provide a 1-sentence poetic description of that archetype.
+    3. Generate a cinematic 3-paragraph narrative about their year.
+    4. Provide 3 specific observations ("insights").
+    5. Provide 2 behavioral patterns.
+    6. Provide 1 punchy card insight (max 12 words).
     
-    Tone: Editorial, cinematic, minimal.
+    TONE: Sophisticated, cinematic, tech-noir.
   `;
 
   try {
@@ -63,24 +50,9 @@ export const generateAIWrapped = async (stats: GitHubStats): Promise<AIInsights>
       }
     });
 
-    const data = JSON.parse(response.text);
-    return data;
+    return JSON.parse(response.text);
   } catch (error) {
-    console.error("AI Error:", error);
-    return {
-      archetype: "The Consistent Builder",
-      archetypeDescription: "You turn ideas into reality through steady, reliable effort across every season.",
-      cardInsight: "Success is the sum of small efforts, repeated day in and day out.",
-      insights: [
-        "You seem to thrive on the quiet momentum of a daily routine.",
-        "Your focus often settles on deepening mastery over chasing trends.",
-        "You tend to be the anchor that keeps projects moving forward through consistency."
-      ],
-      patterns: [
-        "Unwavering commitment to daily progress.",
-        "High reliability across complex systems."
-      ],
-      narrative: "2025 was a masterclass in discipline. You didn't just write code; you built a practice, proving that the most meaningful progress often happens in the quiet moments between milestones. Your journey reflects the heart of a builder."
-    };
+    console.error("AI Generation Error:", error);
+    throw error;
   }
 };

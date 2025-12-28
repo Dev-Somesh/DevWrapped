@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Step, GitHubStats, AIInsights } from './types';
 import { fetchGitHubData } from './services/githubService';
 import { generateAIWrapped } from './services/geminiService';
@@ -43,12 +43,7 @@ const BackgroundIcons: React.FC = () => {
             animationDuration: icon.duration,
           } as React.CSSProperties}
         >
-          <svg
-            height={icon.size}
-            viewBox="0 0 16 16"
-            width={icon.size}
-            fill="white"
-          >
+          <svg height={icon.size} viewBox="0 0 16 16" width={icon.size} fill="white">
             <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
           </svg>
         </div>
@@ -57,42 +52,60 @@ const BackgroundIcons: React.FC = () => {
   );
 };
 
-const PrivacyModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
+const ApiKeyGuard: React.FC<{ onAuthorized: () => void }> = ({ onAuthorized }) => {
+  const handleSelectKey = async () => {
+    // @ts-ignore
+    if (window.aistudio) {
+      try {
+        // @ts-ignore
+        await window.aistudio.openSelectKey();
+        onAuthorized();
+      } catch (err) {
+        console.error("Key selection failed", err);
+      }
+    } else {
+      // If not in AI Studio environment, we assume developer has set process.env.API_KEY
+      onAuthorized();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-in fade-in duration-300">
-      <div className="absolute inset-0 bg-[#0d1117]/80 backdrop-blur-md" onClick={onClose}></div>
-      <div className="relative w-full max-w-lg bg-[#161b22] border border-[#30363d] rounded-[2.5rem] p-10 shadow-[0_30px_60px_rgba(0,0,0,0.5)] overflow-hidden">
-        <div className="absolute top-0 right-0 p-8">
-           <button onClick={onClose} className="text-[#484f58] hover:text-white transition-colors">
-              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-           </button>
-        </div>
-        <div className="space-y-6">
-          <div className="flex items-center gap-3">
-             <div className="w-2 h-2 rounded-full bg-[#39d353]"></div>
-             <h3 className="text-[11px] font-mono uppercase tracking-[0.5em] text-[#8b949e] font-black">Privacy_Standard_Log</h3>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-in fade-in duration-500">
+      <div className="absolute inset-0 bg-[#0d1117]/90 backdrop-blur-2xl"></div>
+      <div className="relative w-full max-w-xl bg-[#161b22] border border-[#30363d] rounded-[3rem] p-12 shadow-[0_40px_100px_rgba(0,0,0,0.8)] overflow-hidden">
+        <div className="space-y-8 relative z-10">
+          <div className="flex items-center gap-4">
+             <div className="w-2 h-2 rounded-full bg-[#39d353] animate-pulse"></div>
+             <h3 className="text-[11px] font-mono uppercase tracking-[0.5em] text-[#8b949e] font-black">Authentication_Gateway</h3>
           </div>
-          <h2 className="text-3xl font-display font-black text-white tracking-tighter">Zero Data Retention.</h2>
-          <div className="space-y-4 font-mono text-[11px] text-[#8b949e] leading-relaxed">
-             <p className="p-4 bg-[#0d1117] rounded-xl border border-white/5">
-               <span className="text-[#39d353] pr-2">✓</span>
-               <span className="text-white">VOLATILE_AUTH:</span> Your Personal Access Token is used strictly for client-side API calls and is never stored on any server or local disk.
-             </p>
-             <p className="p-4 bg-[#0d1117] rounded-xl border border-white/5">
-               <span className="text-[#39d353] pr-2">✓</span>
-               <span className="text-white">ENCRYPTED_SESSION:</span> Analysis happens in-memory and is purged immediately once the browser session is terminated.
-             </p>
-             <p className="p-4 bg-[#0d1117] rounded-xl border border-white/5">
-               <span className="text-[#39d353] pr-2">✓</span>
-               <span className="text-white">NO_TRACKING:</span> We do not collect analytics on who uses the tool, nor do we store any GitHub profile data.
-             </p>
+          
+          <div className="space-y-4">
+            <h2 className="text-4xl font-display font-black text-white tracking-tighter leading-tight">Identity Verification Required.</h2>
+            <p className="text-[#8b949e] text-base font-light leading-relaxed">
+              To process your GitHub history through Gemini Intelligence, you must authorize this session with a valid API key.
+            </p>
           </div>
+
+          <div className="bg-[#0d1117] border border-white/5 p-6 rounded-2xl">
+            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4">Security Protocol</p>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3 text-[11px] font-mono text-[#8b949e]">
+                <span className="text-[#39d353] font-black">✓</span>
+                <span>Encrypted transit via HTTPS</span>
+              </li>
+              <li className="flex items-start gap-3 text-[11px] font-mono text-[#8b949e]">
+                <span className="text-[#39d353] font-black">✓</span>
+                <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-[#58a6ff] hover:underline">Requires Billing Enabled ↗</a>
+              </li>
+            </ul>
+          </div>
+
           <button 
-            onClick={onClose}
-            className="w-full bg-white/5 border border-white/10 text-white font-black py-4 rounded-2xl hover:bg-white/10 transition-all uppercase tracking-widest text-[11px]"
+            onClick={handleSelectKey}
+            className="w-full bg-[#f0f6fc] text-[#0d1117] font-black py-6 rounded-2xl hover:bg-white transition-all shadow-xl text-lg tracking-tighter flex items-center justify-center gap-3 group"
           >
-            Acknowledge & Close
+            AUTHORIZE SESSION
+            <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5Z"></path></svg>
           </button>
         </div>
       </div>
@@ -100,43 +113,39 @@ const PrivacyModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOp
   );
 };
 
-const Footer: React.FC<{ onOpenPrivacy: () => void }> = ({ onOpenPrivacy }) => (
-  <footer className="w-full py-8 px-6 flex flex-col md:flex-row items-center justify-between text-[10px] font-mono uppercase tracking-[0.3em] text-[#484f58] border-t border-white/5 bg-[#0d1117]/50 backdrop-blur-xl relative z-50">
-    <div className="flex items-center gap-4 mb-4 md:mb-0">
-      <span className="text-[#39d353] font-black tracking-widest">DEVWRAPPED_2025</span>
-      <span className="opacity-30">|</span>
-      <button onClick={onOpenPrivacy} className="hover:text-white transition-colors">Privacy_Policy</button>
-    </div>
-    <div className="flex items-center gap-6">
-      <div className="flex flex-col items-center md:items-end">
-        <span className="text-white/40 mb-1">Architected & Engineered By</span>
-        <a 
-          href="https://someshbhardwaj.me" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-[#39d353] hover:text-white transition-colors font-black"
-        >
-          Somesh Bhardwaj
-        </a>
-      </div>
-      <span className="opacity-30 hidden md:block">|</span>
-      <div className="hidden md:flex flex-col items-end">
-        <span className="text-white/40 mb-1">Intelligence By</span>
-        <span className="text-[#58a6ff] font-black">Google Gemini AI</span>
-      </div>
-    </div>
-  </footer>
-);
-
 const App: React.FC = () => {
   const [step, setStep] = useState<Step>(Step.Entry);
   const [username, setUsername] = useState('');
   const [stats, setStats] = useState<GitHubStats | null>(null);
   const [insights, setInsights] = useState<AIInsights | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      // @ts-ignore
+      if (window.aistudio) {
+        // @ts-ignore
+        const hasKey = await window.aistudio.hasSelectedApiKey();
+        setIsAuthorized(hasKey);
+      } else {
+        // If not in AI Studio context, we check if process.env.API_KEY is theoretically available
+        // In a real Netlify deploy, this would be set.
+        setIsAuthorized(!!process.env.API_KEY);
+      }
+    };
+    checkAuth();
+  }, []);
 
   const startAnalysis = async (user: string, token?: string) => {
+    // If not authorized and in AI Studio, open selector
+    // @ts-ignore
+    if (!isAuthorized && window.aistudio) {
+      // @ts-ignore
+      await window.aistudio.openSelectKey();
+      setIsAuthorized(true);
+    }
+
     setUsername(user);
     setStep(Step.Analysis);
     setError(null);
@@ -148,99 +157,68 @@ const App: React.FC = () => {
       const fetchedInsights = await generateAIWrapped(fetchedStats);
       setInsights(fetchedInsights);
       
-      // Delay for cinematic buildup
       setTimeout(() => setStep(Step.Stats), 3500);
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Failed to analyze GitHub profile.');
+      if (err.message && err.message.includes("API key")) {
+        setIsAuthorized(false);
+        setError("Missing API Key. Authorization is required for AI processing.");
+      } else {
+        setError(err.message || 'Failed to analyze GitHub profile.');
+      }
       setStep(Step.Entry);
     }
   };
 
   const nextStep = () => {
-    if (step < Step.Share) {
-      setStep(prev => prev + 1);
-    }
+    if (step < Step.Share) setStep(prev => prev + 1);
   };
 
   const prevStep = () => {
-    if (step > Step.Stats) {
-      setStep(prev => prev - 1);
-    } else if (step === Step.Stats) {
-      setStep(Step.Entry);
-    }
+    if (step > Step.Stats) setStep(prev => prev - 1);
+    else if (step === Step.Stats) setStep(Step.Entry);
   };
 
   const renderStep = () => {
     switch (step) {
-      case Step.Entry:
-        return <Landing onConnect={startAnalysis} error={error} />;
-      case Step.Analysis:
-        return <Loading />;
-      case Step.Stats:
-        return stats && <StatsSlide stats={stats} onNext={nextStep} onBack={prevStep} />;
-      case Step.Patterns:
-        return insights && <PatternDetection insights={insights} onNext={nextStep} onBack={prevStep} />;
-      case Step.AIInsights:
-        return insights && <AIInsightsSlide insights={insights} onNext={nextStep} onBack={prevStep} />;
-      case Step.Narrative:
-        return insights && <NarrativeSummary insights={insights} onNext={nextStep} onBack={prevStep} />;
-      case Step.Archetype:
-        return insights && <ArchetypeReveal insights={insights} onNext={nextStep} onBack={prevStep} />;
-      case Step.Share:
-        return stats && insights && (
-          <div className="w-full flex flex-col items-center pt-12 pb-24 no-scrollbar">
-            <ShareCard stats={stats} insights={insights} onReset={() => setStep(Step.Entry)} />
-            <DevelopmentDossier stats={stats} insights={insights} />
-          </div>
-        );
-      default:
-        return <Landing onConnect={startAnalysis} error={error} />;
+      case Step.Entry: return <Landing onConnect={startAnalysis} error={error} />;
+      case Step.Analysis: return <Loading />;
+      case Step.Stats: return stats && <StatsSlide stats={stats} onNext={nextStep} onBack={prevStep} />;
+      case Step.Patterns: return insights && <PatternDetection insights={insights} onNext={nextStep} onBack={prevStep} />;
+      case Step.AIInsights: return insights && <AIInsightsSlide insights={insights} onNext={nextStep} onBack={prevStep} />;
+      case Step.Narrative: return insights && <NarrativeSummary insights={insights} onNext={nextStep} onBack={prevStep} />;
+      case Step.Archetype: return insights && <ArchetypeReveal insights={insights} onNext={nextStep} onBack={prevStep} />;
+      case Step.Share: return stats && insights && (
+        <div className="w-full flex flex-col items-center pt-12 pb-24 no-scrollbar">
+          <ShareCard stats={stats} insights={insights} onReset={() => setStep(Step.Entry)} />
+          <DevelopmentDossier stats={stats} insights={insights} />
+        </div>
+      );
+      default: return <Landing onConnect={startAnalysis} error={error} />;
     }
   };
 
-  const isSharePage = step === Step.Share;
-
   return (
-    <div className={`min-h-screen bg-[#0d1117] text-[#c9d1d9] flex flex-col relative transition-colors duration-1000 ${isSharePage ? 'overflow-y-auto' : 'overflow-hidden'}`}>
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
-      
-      {/* Background Layer */}
+    <div className={`min-h-screen bg-[#0d1117] text-[#c9d1d9] flex flex-col relative transition-colors duration-1000 ${step === Step.Share ? 'overflow-y-auto' : 'overflow-hidden'}`}>
       <BackgroundIcons />
-
-      {/* Dynamic Background Glows */}
-      <div className="fixed inset-0 pointer-events-none opacity-20 transition-all duration-[3000ms] z-1">
-        <div className={`absolute -top-1/4 -left-1/4 w-[800px] h-[800px] rounded-full blur-[160px] transition-colors duration-[2000ms] ${step >= Step.Stats ? 'bg-purple-900/30' : 'bg-blue-900/20'}`}></div>
-        <div className={`absolute -bottom-1/4 -right-1/4 w-[800px] h-[800px] rounded-full blur-[160px] transition-colors duration-[2000ms] ${step >= Step.Narrative ? 'bg-blue-900/30' : 'bg-purple-900/20'}`}></div>
-      </div>
       
+      {/* Show Guard if not authorized and we are not in the middle of analysis */}
+      {!isAuthorized && step === Step.Entry && <ApiKeyGuard onAuthorized={() => setIsAuthorized(true)} />}
+
       <main className="flex-1 w-full max-w-5xl px-6 mx-auto z-10 flex flex-col items-center justify-center min-h-[calc(100vh-80px)] relative">
         {renderStep()}
       </main>
 
-      {/* Persistent Footer */}
-      <Footer onOpenPrivacy={() => setIsPrivacyOpen(true)} />
-
-      {/* Privacy Modal Overlay */}
-      <PrivacyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
-
-      {/* Progress Footer */}
-      {step >= Step.Stats && step < Step.Share && (
-        <div className="fixed bottom-28 left-0 w-full px-12 flex items-center justify-center gap-6 z-50">
-           <span className="text-[9px] font-mono tracking-[0.5em] text-white/30 uppercase font-black">
-             Process_{String((step - Step.Stats) + 1).padStart(2, '0')}
-           </span>
-           <div className="flex-1 max-w-[200px] h-[1px] bg-white/10 relative overflow-hidden">
-              <div 
-                className="absolute top-0 left-0 h-full bg-[#39d353] transition-all duration-700 shadow-[0_0_10px_rgba(57,211,83,0.5)]"
-                style={{ width: `${((step - Step.Stats) / (Step.Share - Step.Stats - 1)) * 100}%` }}
-              ></div>
-           </div>
+      <footer className="w-full py-8 px-6 flex flex-col md:flex-row items-center justify-between text-[10px] font-mono uppercase tracking-[0.3em] text-[#484f58] border-t border-white/5 bg-[#0d1117]/50 backdrop-blur-xl relative z-50">
+        <div className="flex items-center gap-4">
+          <span className="text-[#39d353] font-black tracking-widest">DEVWRAPPED_2025</span>
+          <span className="opacity-30">|</span>
+          <span className="text-white/40">Architected By Somesh Bhardwaj</span>
         </div>
-      )}
+        <div className="flex items-center gap-6 mt-4 md:mt-0">
+          <span className="text-[#58a6ff] font-black">Google Gemini AI</span>
+        </div>
+      </footer>
     </div>
   );
 };
