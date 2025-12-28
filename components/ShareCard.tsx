@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 import { GitHubStats, AIInsights } from '../types';
@@ -54,7 +53,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
     { type: 'Curiosity', text: 'Ever wondered what your GitHub activity says about you?\n\nI finally saw mine — and it was surprisingly accurate.\n\nMy developer year wrapped 👇' }
   ];
 
-  const hashtags = "#DevWrapped #YearInCode #DeveloperStory #BuildInPublic";
+  const hashtags = "#Dev-Wrapped #YearInCode #DeveloperStory #BuildInPublic";
 
   useEffect(() => {
     const handleResize = () => {
@@ -97,7 +96,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
       cardRef.current.style.transform = originalTransform;
 
       const link = document.createElement('a');
-      link.download = `devwrapped-2025-${stats.username}.png`;
+      link.download = `dev-wrapped-2025-${stats.username}.png`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
@@ -212,7 +211,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               {/* Header */}
               <div className="flex justify-between items-start mb-6 relative z-10 flex-shrink-0">
                 <div className="flex flex-col">
-                  <span className="text-[9px] font-mono text-[#8b949e] tracking-[0.3em] uppercase mb-1">DEV_WRAPPED</span>
+                  <span className="text-[9px] font-mono text-[#8b949e] tracking-[0.3em] uppercase mb-1">DEV-WRAPPED</span>
                   <span className="text-xl font-display font-black text-white tracking-tighter">2025</span>
                 </div>
                 <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md">
@@ -264,7 +263,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               <div className="mt-auto relative z-10 pt-6 border-t border-[#30363d]/30 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-3 opacity-30 hover:opacity-100 transition-opacity">
                   <Octicon className="w-4 h-4 text-white">{Icons.GitHub}</Octicon>
-                  <span className="text-[9px] font-mono tracking-[0.3em] font-black uppercase">WRAPPED.DEV</span>
+                  <span className="text-[9px] font-mono tracking-[0.3em] font-black uppercase">DEV-WRAPPED</span>
                 </div>
                 <div className="flex gap-1">
                   {gridCells.map((color, i) => (

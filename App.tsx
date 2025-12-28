@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Step, GitHubStats, AIInsights } from './types';
 import { fetchGitHubData } from './services/githubService';
@@ -87,7 +86,7 @@ const ApiKeyGuard: React.FC<{ onAuthorized: (model: string) => void }> = ({ onAu
           <div className="space-y-4">
             <h2 className="text-4xl font-display font-black text-white tracking-tighter leading-tight">Authorize AI Session.</h2>
             <p className="text-[#8b949e] text-base font-light leading-relaxed">
-              DevWrapped requires a Gemini API Key. Both <strong>Free Tier</strong> and <strong>Paid</strong> keys are supported.
+              Dev-Wrapped requires a Gemini API Key. Both <strong>Free Tier</strong> and <strong>Paid</strong> keys are supported.
             </p>
           </div>
 
@@ -227,7 +226,7 @@ const App: React.FC = () => {
 
       <footer className="w-full py-8 px-6 flex flex-col md:flex-row items-center justify-between text-[10px] font-mono uppercase tracking-[0.3em] text-[#484f58] border-t border-white/5 bg-[#0d1117]/50 backdrop-blur-xl relative z-50">
         <div className="flex items-center gap-4">
-          <span className="text-[#39d353] font-black tracking-widest">DEVWRAPPED_2025</span>
+          <span className="text-[#39d353] font-black tracking-widest">DEV-WRAPPED_2025</span>
           <span className="opacity-30">|</span>
           <span className="text-white/40">Engineered by Somesh Bhardwaj</span>
         </div>

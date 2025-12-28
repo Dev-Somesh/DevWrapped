@@ -33,7 +33,6 @@ const FeaturePreview: React.FC<{
 const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
   const [username, setUsername] = useState('');
   const [token, setToken] = useState('');
-  const [showTokenInfo, setShowTokenInfo] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,89 +41,48 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
     }
   };
 
-  const features = [
-    { title: 'Identity', icon: '◈' },
-    { title: 'Narrative', icon: '◒' },
-    { title: 'Telemetry', icon: '▣' }
-  ];
-
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center px-6 py-20 animate-in fade-in duration-1000 relative overflow-hidden">
       
-      {/* 1. THE NARRATIVE (Top Left) */}
+      {/* Branding - Top Left Corner */}
+      <div className="fixed top-12 left-12 z-50 hidden md:block select-none">
+        <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.8em] font-black">
+          Dev-Somesh
+        </span>
+      </div>
+
+      {/* Decorative Previews */}
       <FeaturePreview 
-        title="Cinematic_Story"
-        label="Module_01"
-        accentColor="bg-[#bc8cff]"
-        className="left-12 top-24 w-72"
-        delay="-1s"
+        title="Identity" 
+        label="Trace_01" 
+        accentColor="bg-[#39d353]"
+        delay="0s"
+        className="top-24 left-24 w-64"
         content={
           <div className="space-y-2">
-            <p className="text-sm font-light italic leading-relaxed opacity-80">
-              "2025 was a masterclass in consistency. You didn't just push code; you built a practice..."
-            </p>
-            <div className="flex gap-1 pt-2">
-              <div className="h-1 w-12 bg-[#bc8cff]/30 rounded-full"></div>
-              <div className="h-1 w-4 bg-[#bc8cff]/30 rounded-full"></div>
-            </div>
+            <div className="h-2 w-full bg-white/5 rounded"></div>
+            <div className="h-2 w-3/4 bg-white/5 rounded"></div>
+            <div className="text-[10px] font-mono text-[#39d353] mt-2">ARCHETYPE: ARCHITECT</div>
           </div>
         }
       />
 
-      {/* 2. THE ARCHETYPE (Top Right) */}
       <FeaturePreview 
-        title="Archetype_Reveal"
-        label="Module_02"
-        accentColor="bg-[#39d353]"
-        className="right-12 top-32 w-64"
-        delay="-2.5s"
-        content={
-          <div className="space-y-3">
-            <h4 className="text-lg font-display font-black tracking-tighter text-[#39d353]">THE NIGHT OWL</h4>
-            <p className="text-[11px] font-mono text-[#8b949e] leading-snug">
-              64% of your milestones occurred between 22:00 and 04:00.
-            </p>
-          </div>
-        }
-      />
-
-      {/* 3. SECURITY (Bottom Left) */}
-      <FeaturePreview 
-        title="Privacy_Vault"
-        label="Secure_Auth"
+        title="Momentum" 
+        label="Trace_02" 
         accentColor="bg-[#58a6ff]"
-        className="left-16 bottom-24 w-60"
-        delay="-4s"
+        delay="-2s"
+        className="bottom-24 right-24 w-72"
         content={
-          <div className="font-mono text-[10px] space-y-1 text-[#58a6ff]/80">
-            <p>LOCK: AES-256-GCM</p>
-            <p>TRACE: VOLATILE_MEMORY</p>
-            <p>STORAGE: NULL_RETENTION</p>
+          <div className="flex items-end gap-1 h-12">
+            {[40, 70, 45, 90, 65, 80, 50].map((h, i) => (
+              <div key={i} className="flex-1 bg-[#58a6ff]/20 rounded-t-sm" style={{ height: `${h}%` }}></div>
+            ))}
           </div>
         }
       />
 
-      {/* 4. SOCIAL ARTIFACT (Bottom Right) */}
-      <FeaturePreview 
-        title="Share_Artifact"
-        label="Export_Ready"
-        accentColor="bg-[#ff7b72]"
-        className="right-16 bottom-32 w-72"
-        delay="-5.5s"
-        content={
-          <div className="flex gap-4 items-center">
-            <div className="w-16 h-20 bg-gradient-to-br from-[#161b22] to-[#0d1117] border border-white/10 rounded-lg shadow-inner flex flex-col p-2">
-              <div className="w-full h-1 bg-white/10 rounded-full mb-1"></div>
-              <div className="w-2/3 h-1 bg-white/10 rounded-full"></div>
-            </div>
-            <p className="text-[11px] font-light leading-relaxed text-[#8b949e]">
-              Get custom 4K share cards for LinkedIn, X, and your GitHub README.
-            </p>
-          </div>
-        }
-      />
-
-      {/* Top Branding */}
+      {/* Top Branding Nav */}
       <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-center pointer-events-none z-50">
         <div className="flex items-center gap-3 pointer-events-auto">
           <div className="w-8 h-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-lg flex items-center justify-center shadow-2xl">
@@ -133,22 +91,13 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
             </svg>
           </div>
           <div className="flex flex-col leading-none">
-            <span className="text-white font-black text-xs tracking-tighter uppercase">DevWrapped</span>
+            <span className="text-white font-black text-xs tracking-tighter uppercase">Dev-Wrapped</span>
             <span className="text-[#39d353] font-mono text-[7px] tracking-[0.4em] opacity-60">MMXXV</span>
           </div>
         </div>
-        <div className="hidden md:flex gap-4 pointer-events-auto">
-          {features.map((f, i) => (
-            <div key={i} className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/5 text-[9px] font-mono text-[#8b949e] uppercase tracking-widest">
-              <span className="text-[#39d353]">{f.icon}</span> {f.title}
-            </div>
-          ))}
-        </div>
       </nav>
 
-      {/* Main Content Stack */}
       <div className="max-w-4xl w-full flex flex-col items-center text-center relative z-10">
-        
         <div className="mb-16 space-y-6">
           <div className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-2">
             <span className="text-[#8b949e] font-mono text-[9px] uppercase tracking-[0.5em] font-black">
@@ -161,13 +110,11 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
               JOURNEY.
             </span>
           </h1>
-          <p className="text-[#8b949e] text-lg md:text-xl font-light italic max-w-lg mx-auto leading-relaxed opacity-70">
+          <p className="text-[#8b949e] text-lg md:text-xl font-light italic max-w-lg mx-auto leading-relaxed opacity-70 mt-8">
             Relive your 2025 coding milestones through a cinematic lens.
-            One commit at a time.
           </p>
         </div>
 
-        {/* Action Card */}
         <div className="w-full max-w-md relative group">
           <div className="absolute -inset-1 bg-gradient-to-br from-[#39d353]/20 to-[#58a6ff]/20 rounded-[3rem] blur-2xl opacity-40 group-hover:opacity-70 transition duration-1000"></div>
           
@@ -175,51 +122,28 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-3 text-left">
                 <label className="text-[10px] font-mono text-[#484f58] uppercase tracking-[0.3em] ml-4 font-black">Initialization Profile</label>
-                <div className="relative group/input">
-                  <div className="absolute left-6 top-1/2 -translate-y-1/2 text-[#484f58] group-focus-within/input:text-[#39d353] transition-colors">
-                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
-                  </div>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="GitHub Username"
-                    required
-                    className="w-full bg-[#0d1117] border border-[#30363d] rounded-2xl pl-16 pr-6 py-5 text-[#f0f6fc] placeholder:text-[#484f58] focus:outline-none focus:ring-4 focus:ring-[#39d353]/5 focus:border-[#39d353] transition-all text-lg font-medium"
-                  />
-                </div>
-
-                <div className="relative group/input">
-                  <div className="absolute left-6 top-1/2 -translate-y-1/2 text-[#484f58] group-focus-within/input:text-[#58a6ff] transition-colors">
-                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
-                  </div>
-                  <input
-                    type="password"
-                    value={token}
-                    onChange={(e) => setToken(e.target.value)}
-                    placeholder="Auth Token (Optional)"
-                    className="w-full bg-[#0d1117] border border-[#30363d] rounded-2xl pl-16 pr-14 py-5 text-[#f0f6fc] placeholder:text-[#484f58] focus:outline-none focus:ring-4 focus:ring-[#58a6ff]/5 focus:border-[#58a6ff] transition-all text-base font-medium"
-                  />
-                  <button 
-                    type="button"
-                    onClick={() => setShowTokenInfo(!showTokenInfo)}
-                    className="absolute right-6 top-1/2 -translate-y-1/2 text-[#484f58] hover:text-[#58a6ff] transition-colors p-1"
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </button>
-                </div>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="GitHub Username"
+                  required
+                  className="w-full bg-[#0d1117] border border-[#30363d] rounded-2xl pl-6 pr-6 py-5 text-[#f0f6fc] placeholder:text-[#484f58] focus:outline-none focus:ring-4 focus:ring-[#39d353]/5 focus:border-[#39d353] transition-all text-lg font-medium"
+                />
+                <input
+                  type="password"
+                  value={token}
+                  onChange={(e) => setToken(e.target.value)}
+                  placeholder="Auth Token (Optional)"
+                  className="w-full bg-[#0d1117] border border-[#30363d] rounded-2xl pl-6 pr-6 py-5 text-[#f0f6fc] placeholder:text-[#484f58] focus:outline-none focus:ring-4 focus:ring-[#58a6ff]/5 focus:border-[#58a6ff] transition-all text-base font-medium"
+                />
               </div>
 
               {error && (
-                <div className="p-4 rounded-xl bg-red-900/10 border border-red-500/20 text-red-400 text-xs animate-shake flex flex-col gap-2">
+                <div className="p-4 rounded-xl bg-red-900/10 border border-red-500/20 text-red-400 text-xs animate-shake flex flex-col gap-3">
                    <div className="flex items-center gap-3">
-                     <span className="font-black">!</span>
-                     <p className="font-medium">{error}</p>
-                   </div>
-                   <div className="pt-2 border-t border-red-500/10 text-[10px] opacity-70">
-                     Technical failure? Report to <a href="mailto:hello@someshbhardwaj.me" className="underline font-bold">hello@someshbhardwaj.me</a>
+                     <span className="font-black text-lg">!</span>
+                     <p className="font-medium text-left">{error}</p>
                    </div>
                 </div>
               )}
@@ -228,28 +152,12 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
                 type="submit"
                 className="group relative w-full bg-[#238636] hover:bg-[#2ea043] text-white font-black py-6 rounded-2xl transition-all shadow-xl active:scale-[0.98] overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                 <span className="relative flex items-center justify-center gap-3 text-xl tracking-tighter">
                   GENERATE WRAPPED
-                  <svg className="w-6 h-6 transition-transform group-hover:translate-x-1" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5Z"></path>
-                  </svg>
                 </span>
               </button>
             </form>
           </div>
-        </div>
-
-        {/* Footer Meta */}
-        <div className="mt-20 flex flex-col items-center gap-4 opacity-20 relative z-10">
-          <div className="flex items-center gap-6">
-            <span className="h-px w-8 bg-white"></span>
-            <p className="text-[9px] font-mono uppercase tracking-[1em] text-white font-black">Secure_Core_Trace</p>
-            <span className="h-px w-8 bg-white"></span>
-          </div>
-          <p className="text-[10px] font-mono font-medium max-w-xs leading-relaxed text-white">
-            Powered by Google Gemini AI & GitHub Telemetry
-          </p>
         </div>
       </div>
     </div>

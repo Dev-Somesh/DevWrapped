@@ -1,4 +1,3 @@
-
 <p align="center">
   <img src="https://capsule-render.vercel.app/render?type=glitch&color=0d1117&height=300&section=header&text=DEV_WRAPPED&fontSize=80&animation=fadeIn&fontColor=39d353" />
 </p>
@@ -20,7 +19,7 @@
 ---
 
 ## ◈ THE VISION
-**DevWrapped 2025** is an elite Year-in-Review engine that transforms raw GitHub telemetry into a cinematic narrative. By combining **Google Gemini (Flash or Lite)** with your real-world commit history, we reveal the hidden developer archetype behind your contributions.
+**Dev-Wrapped 2025** is an elite Year-in-Review engine that transforms raw GitHub telemetry into a cinematic narrative. By combining **Google Gemini (Flash or Lite)** with your real-world commit history, we reveal the hidden developer archetype behind your contributions.
 
 ---
 
@@ -64,7 +63,7 @@ frontend_stack:
 ---
 
 ## ▣ THE PRIVACY VAULT
-In an era of data harvesting, **DevWrapped** follows a zero-retention policy:
+In an era of data harvesting, **Dev-Wrapped** follows a zero-retention policy:
 - **NO** database connections.
 - **NO** tracking cookies.
 - **VOLATILE_AUTH**: Tokens are purged instantly upon session close.
