@@ -17,7 +17,23 @@ interface SelectedStat {
   value: string | number;
   score: number;
   id: string;
+  icon: React.ReactNode;
 }
+
+// Reusable Octicon components
+const Octicon = ({ children, className = "w-3 h-3" }: { children: React.ReactNode; className?: string }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="currentColor">{children}</svg>
+);
+
+const Icons = {
+  Repo: <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z" />,
+  Calendar: <path d="M4.75 0a.75.75 0 0 1 .75.75V2h5.5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.75 16H2.25A1.75 1.75 0 0 1 .5 14.25V3.75C.5 2.784 1.284 2 2.25 2H3.5V.75A.75.75 0 0 1 4.25 0Zm-2.5 3.5a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h11.5a.25.25 0 0 0 .25-.25V3.75a.25.25 0 0 0-.25-.25Z" />,
+  Flame: <path d="M8 0c-.875 0-1.75.313-2.375.938A3.488 3.488 0 0 0 4.5 3.5c0 .611.161 1.18.441 1.673A6.023 6.023 0 0 0 2 10.5c0 3.038 2.462 5.5 5.5 5.5s5.5-2.462 5.5-5.5c0-1.218-.396-2.343-1.062-3.25a4.484 4.484 0 0 1 .562-2.25A4.478 4.478 0 0 0 11.5 5c0-2.761-1.567-5-3.5-5ZM7.5 14.5c-2.21 0-4-1.79-4-4 0-1.105.447-2.105 1.171-2.829l1.414 1.414L5.5 10.5h4l-.586-1.415 1.415-1.414A3.985 3.985 0 0 1 11.5 10.5c0 2.21-1.79 4-4 4Z" />,
+  Code: <path d="M4.72 3.22a.75.75 0 0 1 1.06 1.06L2.06 8l3.72 3.72a.75.75 0 1 1-1.06 1.06L.47 8.53a.75.75 0 0 1 0-1.06l4.25-4.25Zm6.56 0a.75.75 0 1 0-1.06 1.06L13.94 8l-3.72 3.72a.75.75 0 1 0 1.06 1.06l4.25-4.25a.75.75 0 0 0 0-1.06l-4.25-4.25Z" />,
+  GitCommit: <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm5 0h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5Zm-10 0h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5Z" />,
+  GitHub: <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z" />,
+  Dot: <circle cx="8" cy="8" r="4.5" />
+};
 
 const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -103,10 +119,34 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
   };
 
   const candidateStats: SelectedStat[] = [
-    { id: 'activeDays', label: 'Active Days', value: stats.activeDays, score: 3 },
-    { id: 'streak', label: 'Max Streak', value: `${stats.streak}d`, score: 3 },
-    { id: 'focus', label: 'Top Focus', value: stats.topLanguages[0]?.name || 'Code', score: 3 },
-    { id: 'commits', label: 'Contributions', value: stats.totalCommits, score: 2 },
+    { 
+      id: 'activeDays', 
+      label: 'Active Days', 
+      value: stats.activeDays, 
+      score: 3,
+      icon: <Octicon>{Icons.Calendar}</Octicon>
+    },
+    { 
+      id: 'streak', 
+      label: 'Max Streak', 
+      value: `${stats.streak}d`, 
+      score: 3,
+      icon: <Octicon className="w-3 h-3 text-[#d29922]">{Icons.Flame}</Octicon>
+    },
+    { 
+      id: 'focus', 
+      label: 'Top Focus', 
+      value: stats.topLanguages[0]?.name || 'Code', 
+      score: 3,
+      icon: <Octicon className="w-3 h-3 text-[#39d353]">{Icons.Dot}</Octicon>
+    },
+    { 
+      id: 'commits', 
+      label: 'Contributions', 
+      value: stats.totalCommits, 
+      score: 2,
+      icon: <Octicon className="w-3 h-3 text-[#58a6ff]">{Icons.GitCommit}</Octicon>
+    },
   ];
 
   const gridCells = Array.from({ length: 12 }).map(() => {
@@ -177,7 +217,13 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
                 </div>
                 <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md">
                   <img src={stats.avatarUrl} alt={stats.username} className="w-6 h-6 rounded-full grayscale" />
-                  <span className="text-[11px] font-black text-white/90">@{stats.username}</span>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-black text-white/90 leading-none">@{stats.username}</span>
+                    <div className="flex items-center gap-1 opacity-40">
+                      <Octicon className="w-2 h-2">{Icons.Repo}</Octicon>
+                      <span className="text-[7px] font-mono uppercase tracking-widest">{stats.reposContributed} repos</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -196,7 +242,12 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               <div className={`grid grid-cols-2 gap-x-8 gap-y-4 relative z-10 ${aspectRatio === '1:1' ? 'mb-4' : 'mb-6'}`}>
                 {candidateStats.map((stat) => (
                   <div key={stat.id} className="border-t border-white/10 pt-2 md:pt-4 group">
-                    <p className="text-[8px] md:text-[9px] text-[#484f58] font-mono uppercase tracking-[0.2em] mb-1 group-hover:text-[#8b949e] transition-colors">{stat.label}</p>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="opacity-40 group-hover:opacity-100 transition-opacity">
+                        {stat.icon}
+                      </span>
+                      <p className="text-[8px] md:text-[9px] text-[#484f58] font-mono uppercase tracking-[0.2em] group-hover:text-[#8b949e] transition-colors">{stat.label}</p>
+                    </div>
                     <p className={`${aspectRatio === '1:1' ? 'text-xl' : 'text-2xl md:text-3xl'} text-white font-black tracking-tighter truncate`}>{stat.value}</p>
                   </div>
                 ))}
@@ -212,7 +263,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               {/* Footer Grid */}
               <div className="mt-auto relative z-10 pt-6 border-t border-[#30363d]/30 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-3 opacity-30 hover:opacity-100 transition-opacity">
-                  <svg height="14" viewBox="0 0 16 16" width="14" fill="white"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+                  <Octicon className="w-4 h-4 text-white">{Icons.GitHub}</Octicon>
                   <span className="text-[9px] font-mono tracking-[0.3em] font-black uppercase">WRAPPED.DEV</span>
                 </div>
                 <div className="flex gap-1">
@@ -286,9 +337,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
                  {isExporting ? (
                    <div className="w-6 h-6 border-2 border-[#0d1117] border-t-transparent rounded-full animate-spin"></div>
                  ) : (
-                   <svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor">
-                     <path d="M4.5 14h7a.5.5 0 0 0 .5-.5V11h1v2.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 3 13.5V11h1v2.5a.5.5 0 0 0 .5.5Zm0-12h7a.5.5 0 0 1 .5.5V5h1V2.5A1.5 1.5 0 0 0 11.5 1h-7A1.5 1.5 0 0 0 3 2.5V5h1V2.5a.5.5 0 0 1 .5-.5ZM5 7h6a1 1 0 0 1 1 1v3H4V8a1 1 0 0 1 1-1Zm0 1v2h6V8H5Z"></path>
-                   </svg>
+                   <Octicon className="w-6 h-6">{Icons.GitHub}</Octicon>
                  )}
                  {isExporting ? 'EXPORTING...' : 'EXPORT MY YEAR'}
                </button>
