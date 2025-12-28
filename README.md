@@ -1,90 +1,94 @@
-# ◈ DevWrapped 2025
-### *Your Year in Code, Reimagined through a Cinematic Lens.*
+<p align="center">
+  <img src="https://capsule-render.vercel.app/render?type=soft&color=0d1117&height=300&section=header&text=◈%20DEV_WRAPPED&fontSize=80&animation=fadeIn&fontColor=ffffff" />
+</p>
 
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
-[![Gemini AI](https://img.shields.io/badge/AI-Gemini_3_Flash-8E75FF?style=for-the-badge&logo=google-gemini)](https://ai.google.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-[![Privacy](https://img.shields.io/badge/Privacy-Zero_Retention-39D353?style=for-the-badge)](https://github.com/Dev-Somesh)
+<p align="center">
+  <kbd><b>INITIALIZING_SESSION...</b></kbd>
+</p>
 
-**DevWrapped 2025** is an automated, story-driven Year-in-Review experience for developers. Moving beyond dry metrics and dashboards, it uses **Google Gemini AI** to interpret raw GitHub telemetry into human-centric narratives and unique developer archetypes.
+<p align="center">
+  <i>"2025 wasn't just about the code you shipped. It was about the rhythm you found."</i>
+</p>
 
----
-
-## ▣ The Vision
-Most recap tools focus on numbers: "You made 1,000 commits." We focus on the *rhythm*. 
-- Were you a **Quiet Optimizer**, maintaining the foundation of legacy systems?
-- Or a **Night Owl Coder**, thriving in the silence of 3:00 AM?
-
-DevWrapped transforms your technical footprint into a cinematic artifact you can be proud to share.
-
----
-
-## ◈ Core Features
-
-### 1. Cinematic Storytelling
-A multi-step, animated reveal of your year. No sudden data dumps—just a gradual discovery of your consistency, momentum, fluency, and discipline.
-
-### 2. AI-Driven Archetypes
-Powered by `gemini-3-flash-preview`, our engine analyzes:
-- **Activity Patterns**: Bursts vs. Consistency.
-- **Technical DNA**: Language dominance and repo ownership.
-- **Behavioral Verbs**: Inferred insights about how you *actually* work.
-
-### 3. Shareable Artifacts
-Export custom-rendered PNGs in multiple aspect ratios (1:1, 4:5, 9:16) optimized for LinkedIn, X (Twitter), and Instagram.
-
-### 4. The Intelligence Dossier
-A comprehensive, long-form report including:
-- **Section I: The Narrative** — A long-form prose summary of your year.
-- **Section II: Observations** — Deep-dive behavioral patterns.
-- **Section III: Technical DNA** — A breakdown of your tech stack landscape.
-
-### 5. Social Integration
-Built-in "Story Hooks" designed to drive healthy engagement. We provide the copy, the hashtags, and the vibe—you provide the journey.
+<p align="center">
+  <img src="https://img.shields.io/badge/INTELLIGENCE-GEMINI_3_FLASH-8E75FF?style=for-the-badge&logo=google-gemini&logoColor=white" />
+  <img src="https://img.shields.io/badge/TELEMETRY-GITHUB_V3-39D353?style=for-the-badge&logo=github&logoColor=white" />
+  <img src="https://img.shields.io/badge/DESIGN-CINEMATIC_DARK-58a6ff?style=for-the-badge" />
+</p>
 
 ---
 
-## ⚙︎ Technical Architecture
-
-### Frontend
-- **Framework**: React 19 (ESM)
-- **Styling**: Tailwind CSS with custom "GitHub Dark" design tokens.
-- **Typography**: Space Grotesk (Display) & JetBrains Mono (Technical).
-- **Imaging**: `html-to-image` for high-fidelity client-side rendering.
-
-### Intelligence Layer
-- **API**: Google Generative AI SDK (`@google/genai`).
-- **Model**: `gemini-3-flash-preview` for high-speed, structured JSON reasoning.
-- **Data Source**: GitHub REST API v3.
-
-### Security & Privacy
-- **Zero Retention**: We store absolutely nothing. 
-- **Volatile Auth**: Personal Access Tokens (PATs) exist only in browser memory and are purged on refresh.
-- **Client-Side Processing**: Data fetching and image generation happen entirely in your browser.
+## ◈ THE VISION
+**DevWrapped 2025** is an elite Year-in-Review engine that transforms raw GitHub activity into a cinematic narrative. We believe metrics without meaning are just noise. By combining **Google Gemini AI** with your real-world telemetry, we reveal the hidden developer archetype behind your commits.
 
 ---
 
-## ◈ Getting Started
+## ◒ SYSTEM MODULES
 
-1. **Connect**: Enter your GitHub username.
-2. **Authenticate (Optional)**: Provide a Personal Access Token (PAT) for private repo analysis and to avoid rate limits.
-3. **Discover**: Experience the cinematic flow.
-4. **Export**: Claim your Wrapped card and the full Dossier.
+### ▣ Identity Reveal
+We don't just count commits; we detect patterns. 
+*   **The Night Owl**: Thriving in the 3 AM silence.
+*   **The Consistent Builder**: The anchor of the codebase.
+*   **The Polyglot Explorer**: Fluent across the tech landscape.
 
----
+### ▣ Cinematic Narrative
+Experience a multi-chapter reveal of your year, moving from **The Consistency** through **The Discipline** to your final **Archetype Reveal**.
 
-## ▣ Privacy Protocol
-This project follows the **NULL_RETENTION** standard:
-- No database connection.
-- No analytics trackers.
-- No storage of your code or tokens.
-- **It’s your data. We just help you see it.**
+### ▣ The Intelligence Dossier
+Export a comprehensive, professional-grade analysis of your technical DNA. A long-form artifact designed for your personal archives or professional portfolio.
 
 ---
 
-## ◈ Credits
-- **Architected & Engineered by**: [Somesh Bhardwaj](https://someshbhardwaj.me)
-- **Powered by**: Google Gemini & GitHub Telemetry
+## ⚙︎ ARCHITECTURAL TRACE
+
+```yaml
+design_language:
+  theme: GitHub_High_Contrast_Dark
+  typography: 
+    - Space Grotesk (Display)
+    - JetBrains Mono (Technical)
+  aesthetic: Glassmorphism / Cinematic Editorial
+
+security_protocol:
+  retention: ZERO_STORAGE
+  encryption: AES-256-GCM (Session Volatile)
+  processing: Client-Side Only
+
+intelligence_core:
+  model: gemini-3-flash-preview
+  provider: Google_Vertex_AI
+```
 
 ---
-*DevWrapped is not affiliated with GitHub, Inc. It is an independent tribute to the developer community.*
+
+## ▣ THE PRIVACY VAULT
+In an era of data harvesting, **DevWrapped** stands as a beacon of transparency. 
+- **NO** database connections.
+- **NO** tracking cookies.
+- **NO** persistent storage.
+- **VOLATILE_AUTH**: Your tokens are used in memory and purged instantly.
+
+---
+
+## ◈ EXPORT ARTIFACTS
+The system generates high-fidelity PNG artifacts optimized for:
+- **LinkedIn**: Thoughtful, pattern-driven hooks.
+- **X (Twitter)**: Minimalist, high-impact statements.
+- **Instagram**: Identity-focused, aesthetic mystery.
+
+---
+
+<p align="center">
+  <br />
+  <b>ENGINEERED BY <a href="https://someshbhardwaj.me">SOMESH BHARDWAJ</a></b><br />
+  <span style="opacity: 0.3; font-family: monospace; font-size: 10px; letter-spacing: 5px;">*** END_OF_MANIFEST_2025 ***</span>
+</p>
+
+<p align="center">
+  <a href="https://someshbhardwaj.me">
+    <img src="https://img.shields.io/badge/PORTFOLIO-000000?style=for-the-badge&logo=buffer&logoColor=white" />
+  </a>
+  <a href="https://www.linkedin.com/in/ersomeshbhardwaj/">
+    <img src="https://img.shields.io/badge/LINKEDIN-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" />
+  </a>
+</p>
