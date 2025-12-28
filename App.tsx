@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Step, GitHubStats, AIInsights } from './types';
 import { fetchGitHubData } from './services/githubService';
@@ -67,33 +68,38 @@ const ApiKeyGuard: React.FC<{ onAuthorized: () => void }> = ({ onAuthorized }) =
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-in fade-in duration-500">
-      <div className="absolute inset-0 bg-[#0d1117]/95 backdrop-blur-2xl"></div>
+      <div className="absolute inset-0 bg-[#0d1117]/95 backdrop-blur-3xl"></div>
       <div className="relative w-full max-w-xl bg-[#161b22] border border-[#30363d] rounded-[3rem] p-12 shadow-[0_40px_100px_rgba(0,0,0,0.8)] overflow-hidden">
         <div className="space-y-8 relative z-10">
           <div className="flex items-center gap-4">
              <div className="w-2 h-2 rounded-full bg-[#39d353] animate-pulse"></div>
-             <h3 className="text-[11px] font-mono uppercase tracking-[0.5em] text-[#8b949e] font-black">Authentication_Protocol</h3>
+             <h3 className="text-[11px] font-mono uppercase tracking-[0.5em] text-[#8b949e] font-black">Authentication_Request</h3>
           </div>
           
           <div className="space-y-4">
-            <h2 className="text-4xl font-display font-black text-white tracking-tighter leading-tight">Authorize Intelligence Session.</h2>
+            <h2 className="text-4xl font-display font-black text-white tracking-tighter leading-tight">Initialize AI Core.</h2>
             <p className="text-[#8b949e] text-base font-light leading-relaxed">
-              To transform your GitHub telemetry into a cinematic story, we utilize Gemini AI. This requires a one-time session authorization.
+              This application uses <strong>Gemini 3 Flash</strong> to interpret your GitHub telemetry. To proceed, authorize a session via your Google Cloud account.
             </p>
           </div>
 
-          <div className="bg-[#0d1117] border border-white/5 p-6 rounded-2xl">
-            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4">Identity & Privacy</p>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3 text-[11px] font-mono text-[#8b949e]">
-                <span className="text-[#39d353] font-black">01</span>
-                <span>Session keys are volatile and never stored.</span>
-              </li>
-              <li className="flex items-start gap-3 text-[11px] font-mono text-[#8b949e]">
-                <span className="text-[#39d353] font-black">02</span>
-                <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-[#58a6ff] hover:underline">Requires Paid Google Cloud Project ↗</a>
-              </li>
-            </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-[#0d1117] border border-white/5 p-5 rounded-2xl">
+              <p className="text-[9px] font-mono text-white/40 uppercase tracking-widest mb-3">Model_Requirement</p>
+              <p className="text-[11px] font-mono text-[#f0f6fc]">Gemini 3 Flash</p>
+              <p className="text-[9px] font-mono text-[#8b949e] mt-1 italic">Optimized for Narrative Logic</p>
+            </div>
+            <div className="bg-[#0d1117] border border-white/5 p-5 rounded-2xl">
+              <p className="text-[9px] font-mono text-white/40 uppercase tracking-widest mb-3">Billing_Status</p>
+              <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-[11px] font-mono text-[#58a6ff] hover:underline">Requires Paid Project ↗</a>
+              <p className="text-[9px] font-mono text-[#8b949e] mt-1 italic">BYO-Key Architecture</p>
+            </div>
+          </div>
+
+          <div className="p-5 bg-white/5 border border-white/5 rounded-2xl">
+             <p className="text-[10px] font-mono text-[#8b949e] leading-relaxed">
+               <span className="text-white font-black pr-2">NOTE:</span> If you are the developer, you can skip this for all users by setting <code>API_KEY</code> in your Netlify Environment Variables.
+             </p>
           </div>
 
           <button 
@@ -123,7 +129,6 @@ const App: React.FC = () => {
       if (window.aistudio && await window.aistudio.hasSelectedApiKey()) {
         setIsAuthorized(true);
       } else if (process.env.API_KEY) {
-        // If developer has set it in Netlify, it's globally authorized
         setIsAuthorized(true);
       }
     };
@@ -131,7 +136,7 @@ const App: React.FC = () => {
   }, []);
 
   const startAnalysis = async (user: string, token?: string) => {
-    // Double check auth status before starting
+    // Ensure auth is cleared if we start
     // @ts-ignore
     if (!isAuthorized && window.aistudio) {
       // @ts-ignore
@@ -153,11 +158,11 @@ const App: React.FC = () => {
       setTimeout(() => setStep(Step.Stats), 3500);
     } catch (err: any) {
       console.error(err);
-      if (err.message && (err.message.includes("API_KEY") || err.message.includes("404"))) {
+      if (err.message && (err.message.includes("API_KEY") || err.message.includes("404") || err.message.includes("key"))) {
         setIsAuthorized(false);
-        setError("Authorization Required. Please select a valid API key.");
+        setError("API Session Failed. Please select a valid key from a paid Google Cloud project.");
       } else {
-        setError(err.message || 'Analysis failed. Check your GitHub username.');
+        setError(err.message || 'Analysis failed. Verify your GitHub username.');
       }
       setStep(Step.Entry);
     }
@@ -205,7 +210,7 @@ const App: React.FC = () => {
         <div className="flex items-center gap-4">
           <span className="text-[#39d353] font-black tracking-widest">DEVWRAPPED_2025</span>
           <span className="opacity-30">|</span>
-          <span className="text-white/40">Engineered By Somesh Bhardwaj</span>
+          <span className="text-white/40">Architected by Somesh Bhardwaj</span>
         </div>
         <div className="flex items-center gap-6 mt-4 md:mt-0">
           <span className="text-[#58a6ff] font-black uppercase tracking-widest opacity-60">Intelligence: Gemini 3 Flash</span>

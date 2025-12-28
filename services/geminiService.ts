@@ -1,32 +1,32 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { GitHubStats, AIInsights } from "../types";
 
 export const generateAIWrapped = async (stats: GitHubStats): Promise<AIInsights> => {
-  // Always create a new instance inside the call to ensure we use the latest key
-  // provided via environment or window.aistudio dialog.
+  // We create a fresh instance to ensure it picks up whichever key is active in the environment
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const prompt = `
-    Analyze this developer's 2024-2025 GitHub activity. Create a compelling "Year Wrapped" narrative.
+    Analyze this developer's 2024-2025 GitHub activity. Create an artistic, cinematic "Year Wrapped" story.
     
-    TELEMETRY DATA:
-    - Username: ${stats.username}
-    - Total Commits: ${stats.totalCommits}
-    - Active Days: ${stats.activeDays}
-    - Primary Languages: ${stats.topLanguages.map(l => l.name).join(', ')}
-    - Repo Impact: ${stats.reposContributed}
-    - Max Streak: ${stats.streak} days
-    - Peak Activity: ${stats.mostActiveMonth}
+    DEVELOPER CONTEXT:
+    - User: ${stats.username}
+    - Commits: ${stats.totalCommits}
+    - Engagement: ${stats.activeDays} days active
+    - Languages: ${stats.topLanguages.map(l => l.name).join(', ')}
+    - Scope: ${stats.reposContributed} repositories
+    - Discipline: ${stats.streak} day streak
+    - Seasonality: Most active in ${stats.mostActiveMonth}
     
-    STORYTELLING REQUIREMENTS:
-    1. Select a unique Archetype that feels cinematic (e.g., The Midnight Architect, The Silent Optimizer, The Polyglot Voyager).
-    2. Write a 1-sentence poetic "classification" for the archetype.
-    3. Generate a cinematic 3-paragraph story of their year. Focus on the 'vibe' of their work.
-    4. Provide 3 specific behavioral "observations" (e.g., "Thrives when focusing on deep logic in C++").
-    5. Provide 2 coding patterns noticed.
-    6. Provide 1 short "card insight" (max 10 words) for their social media share card.
+    RESPONSE ARCHITECTURE (JSON ONLY):
+    1. archetype: A high-impact title (e.g., The Midnight Architect).
+    2. archetypeDescription: A poetic 1-sentence definition.
+    3. insights: 3 specific behavioral observations based on their tech/activity.
+    4. patterns: 2 high-level development rhythms detected.
+    5. narrative: A 3-paragraph cinematic summary of their growth.
+    6. cardInsight: A punchy, sharable 1-line quote (max 10 words).
     
-    TONE: Sophisticated, reflective, high-end editorial.
+    TONE: Professional, sophisticated, narrative-driven.
   `;
 
   try {
@@ -50,10 +50,10 @@ export const generateAIWrapped = async (stats: GitHubStats): Promise<AIInsights>
       }
     });
 
-    if (!response.text) throw new Error("AI returned empty response");
+    if (!response.text) throw new Error("AI core returned empty trace");
     return JSON.parse(response.text);
   } catch (error: any) {
-    console.error("AI Generation Failed:", error);
-    throw new Error(error.message || "Failed to generate AI insights. Check your API key.");
+    console.error("Gemini Core Error:", error);
+    throw new Error(error.message || "Failed to generate AI insights. Verify your API key status.");
   }
 };
