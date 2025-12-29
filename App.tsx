@@ -14,6 +14,7 @@ import Loading from './components/Loading';
 // import ArchetypeReveal from './components/ArchetypeReveal';
 import ShareCard from './components/ShareCard';
 import DevelopmentDossier from './components/DevelopmentDossier';
+import CreditsModal from './components/CreditsModal';
 
 const BackgroundIcons: React.FC = () => {
   const icons = useMemo(() => {
@@ -61,6 +62,7 @@ const App: React.FC = () => {
   const [insights, setInsights] = useState<AIInsights | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeModel] = useState("gemini-3-flash-preview");
+  const [showCredits, setShowCredits] = useState(false);
 
   const startAnalysis = async (user: string, token?: string) => {
     setStep(Step.Analysis);
@@ -171,11 +173,20 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-6 mt-6 md:mt-0">
+          <button
+            onClick={() => setShowCredits(true)}
+            className="text-[#8b949e] hover:text-[#58a6ff] transition-colors text-[9px] tracking-[0.25em] uppercase font-mono hover:underline"
+          >
+            Credits
+          </button>
           <span className="text-[#58a6ff] font-black uppercase tracking-widest opacity-60 text-[9px]">
             Engine: {activeModel.includes('lite') ? 'Gemini Lite' : 'Gemini 3 Flash'}
           </span>
         </div>
       </footer>
+
+      {/* Credits Modal */}
+      <CreditsModal isOpen={showCredits} onClose={() => setShowCredits(false)} />
     </div>
   );
 };

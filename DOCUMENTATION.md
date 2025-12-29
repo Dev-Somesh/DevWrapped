@@ -40,6 +40,24 @@
 - **Streamlined User Experience**: Direct flow from input to results
 - **Export Capabilities**: High-quality image export for sharing
 
+## 🎨 Visual Showcase
+
+<div align="center">
+
+### Landing Experience
+<img src="./assets/devwrapped-hero.png" alt="DevWrapped Landing Page" width="700" />
+<p><em>Elegant landing page with animated GitHub logos and professional input interface</em></p>
+
+### Share Card Output
+<img src="./assets/devwrapped-2025-Dev-Somesh.png" alt="Share Card" width="500" />
+<p><em>Compact summary card perfect for social media sharing</em></p>
+
+### Detailed Analysis
+<img src="./assets/dev-dossier-2025-Dev-Somesh.png" alt="Development Dossier" width="700" />
+<p><em>Comprehensive dossier with repository analysis, tech stack, and activity visualization</em></p>
+
+</div>
+
 ### Technology Stack
 
 - **Frontend**: React 19, TypeScript, Tailwind CSS
@@ -507,11 +525,28 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## 🙏 Acknowledgments
 
-- **Google Gemini AI**: For powerful AI capabilities
-- **GitHub API**: For comprehensive developer data
-- **Netlify**: For seamless deployment and serverless functions
-- **React Team**: For the excellent framework
-- **Tailwind CSS**: For utility-first styling
+DevWrapped 2025 is made possible by the incredible technologies and services provided by:
+
+### AI & Intelligence
+- **[Google Gemini AI](https://ai.google.dev/)** - Powering intelligent insights and narrative generation with advanced language models
+
+### Data & APIs  
+- **[GitHub API](https://docs.github.com/en/rest)** - Comprehensive developer data and repository insights that form the foundation of our analysis
+
+### Infrastructure & Deployment
+- **[Netlify](https://netlify.com)** - Serverless functions and seamless deployment platform enabling scalable, secure hosting
+
+### Frontend Technologies
+- **[React](https://react.dev)** - Modern UI framework for creating interactive and responsive user experiences
+- **[Tailwind CSS](https://tailwindcss.com)** - Utility-first CSS framework enabling rapid, consistent styling
+- **[Vite](https://vitejs.dev)** - Lightning-fast build tool and development server for optimal development experience
+
+### Development Tools
+- **[TypeScript](https://typescriptlang.org)** - Type-safe JavaScript ensuring robust, maintainable code
+- **[html-to-image](https://github.com/bubkoo/html-to-image)** - High-quality image export functionality for sharing capabilities
+
+### Special Recognition
+We extend our gratitude to the open-source community and the organizations that provide generous APIs and tools, making projects like DevWrapped possible. Each technology contributes to creating a seamless, intelligent, and beautiful experience for developers worldwide.
 
 ---
 
