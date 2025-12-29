@@ -147,7 +147,7 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
       </nav>
 
       {/* Main Content Stack */}
-      <div className="max-w-4xl w-full flex flex-col items-center text-center relative z-10">
+      <div className="max-w-5xl w-full flex flex-col items-center text-center relative z-10">
         
         <div className="mb-16 space-y-6">
           <div className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-2">
@@ -155,10 +155,10 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
               Engineering Year-in-Review
             </span>
           </div>
-          <h1 className="text-6xl md:text-[9rem] font-display font-black tracking-tighter text-[#f0f6fc] leading-[0.75] select-none">
+          <h1 className="text-5xl md:text-[7.5rem] font-display font-black tracking-tighter text-[#f0f6fc] leading-[0.75] select-none">
             CELEBRATE<br />YOUR<br />
             <span className="animate-gradient text-transparent bg-clip-text bg-gradient-to-r from-[#39d353] via-[#58a6ff] to-[#bc8cff] drop-shadow-[0_0_40px_rgba(57,211,83,0.15)]">
-              JOURNEY.
+              CODE JOURNEY.
             </span>
           </h1>
           <p className="text-[#8b949e] text-lg md:text-xl font-light italic max-w-lg mx-auto leading-relaxed opacity-70">
@@ -210,6 +210,14 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
                     </svg>
                   </button>
                 </div>
+                <p className="mt-3 ml-4 max-w-sm flex items-start gap-2 text-[10px] font-mono leading-relaxed text-[#c9d1d9]">
+                  <span className="mt-[2px] inline-flex h-3 w-3 items-center justify-center rounded-full bg-[#161b22] border border-[#238636] text-[8px] text-[#39d353]">
+                    ✓
+                  </span>
+                  <span className="px-2 py-1 rounded-full bg-[#161b22] border border-[#238636]/40 text-[#8b949e]">
+                    GitHub tokens are used once in-memory to call the GitHub API and are never stored, logged, or shared.
+                  </span>
+                </p>
               </div>
 
               {error && (
