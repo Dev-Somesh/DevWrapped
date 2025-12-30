@@ -17,6 +17,11 @@ body {
   color: var(--github-text);
   margin: 0;
   overflow-x: hidden;
+  /* Improve mobile performance */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent zoom on input focus on iOS */
+  -webkit-text-size-adjust: 100%;
 }
 
 .font-display {
@@ -27,9 +32,15 @@ body {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Custom scrollbar matching GitHub dark */
+/* Mobile-optimized scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
+}
+
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
 }
 
 ::-webkit-scrollbar-track {
@@ -44,6 +55,35 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #484f58;
+}
+
+/* Mobile touch improvements */
+@media (max-width: 768px) {
+  /* Improve touch targets */
+  button, a, input {
+    min-height: 44px;
+  }
+  
+  /* Prevent horizontal scroll */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  /* Optimize text rendering on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* No-scrollbar utility for mobile */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* Ensure text doesn't overflow during export */

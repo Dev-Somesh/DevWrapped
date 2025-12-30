@@ -12,9 +12,23 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
   const reportRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
 
-  // Temporarily disable highlighting to prevent CSS leakage
+  // Enhanced highlighting function for narratives with user data
   const highlightText = (text: string) => {
-    return text; // Return text as-is without highlighting
+    return text
+      // Highlight usernames (with @ symbol and without)
+      .replace(/@(\w+)/g, '<span class="text-[#39d353] font-semibold not-italic">@$1</span>')
+      .replace(new RegExp(`\\b${stats.username}\\b`, 'gi'), '<span class="text-[#39d353] font-semibold not-italic">$&</span>')
+      // Highlight numbers with units (contributions, days, streak, etc.)
+      .replace(/(\d+)\s+(day|days|contribution|contributions|repo|repos|language|languages|commit|commits|star|stars)/gi, '<span class="text-[#39d353] font-semibold not-italic">$1 $2</span>')
+      // Highlight programming languages and technologies
+      .replace(/(JavaScript|TypeScript|Python|React|Node\.js|HTML|CSS|Java|C\+\+|Go|Rust|PHP|Ruby|Swift|Kotlin|Vue|Angular|Docker|Git)/gi, '<span class="text-[#39d353] font-semibold not-italic">$1</span>')
+      // Highlight key development terms
+      .replace(/(streak|pattern|consistency|rhythm|milestone|journey|wrapped|archetype|developer|coding|programming|repository|commit|merge|pull request)/gi, '<span class="text-[#39d353] font-semibold not-italic">$1</span>')
+      // Highlight months
+      .replace(/(January|February|March|April|May|June|July|August|September|October|November|December)/gi, '<span class="text-[#39d353] font-semibold not-italic">$1</span>')
+      // Convert line breaks to proper HTML paragraphs
+      .replace(/\n\n/g, '</p><p class="mb-6">')
+      .replace(/\n/g, '<br/>');
   };
 
   const exportFullReport = async () => {
@@ -42,23 +56,24 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
   };
 
   return (
-    <div className="w-full max-w-5xl mt-24 mb-32 animate-in fade-in duration-1000">
-      <div className="flex justify-between items-end mb-12 px-4">
-        <div className="space-y-2">
-          <h3 className="text-4xl font-display font-black text-white tracking-tighter uppercase">Intelligence Dossier</h3>
-          <p className="text-[#8b949e] font-light italic text-lg">Comprehensive analysis of the 2025 development cycle.</p>
+    <div className="w-full max-w-5xl mt-12 md:mt-24 mb-16 md:mb-32 animate-in fade-in duration-1000 px-4 md:px-0">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 gap-6 md:gap-0">
+        <div className="space-y-2 text-center md:text-left w-full md:w-auto">
+          <h3 className="text-2xl md:text-4xl font-display font-black text-white tracking-tighter uppercase">Intelligence Dossier</h3>
+          <p className="text-[#8b949e] font-light italic text-base md:text-lg">Comprehensive analysis of the 2025 development cycle.</p>
         </div>
         <button 
           onClick={exportFullReport}
           disabled={isExporting}
-          className="bg-[#39d353] text-black hover:bg-[#2ea043] px-8 py-4 rounded-full text-xs font-mono uppercase tracking-widest transition-all flex items-center gap-3 active:scale-95 font-black shadow-xl"
+          className="bg-[#39d353] text-black hover:bg-[#2ea043] px-4 md:px-8 py-3 md:py-4 rounded-full text-[10px] md:text-xs font-mono uppercase tracking-widest transition-all flex items-center gap-2 md:gap-3 active:scale-95 font-black shadow-xl w-full md:w-auto justify-center"
         >
           {isExporting ? 'Processing...' : (
             <>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
-              DOWNLOAD FULL DOSSIER
+              <span className="hidden sm:inline">DOWNLOAD FULL DOSSIER</span>
+              <span className="sm:hidden">DOWNLOAD DOSSIER</span>
             </>
           )}
         </button>
@@ -66,7 +81,7 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
 
       <div 
         ref={reportRef}
-        className="bg-[#0d1117] border border-[#30363d] rounded-[3.5rem] p-8 md:p-20 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] relative overflow-hidden"
+        className="bg-[#0d1117] border border-[#30363d] rounded-2xl md:rounded-[3.5rem] p-4 md:p-8 lg:p-20 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] relative overflow-hidden"
       >
         {/* Background GitHub Logos */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -112,18 +127,18 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
             </svg>
           </div>
         </div>
-        {/* Dossier Header */}
-        <div className="flex flex-col md:flex-row justify-between gap-12 mb-20 pb-12 border-b border-[#30363d]">
-          <div className="flex items-center gap-8">
-            <img src={stats.avatarUrl} className="w-28 h-28 rounded-full border-4 border-[#30363d] grayscale" alt={stats.username} />
+        {/* Dossier Header - Mobile Optimized */}
+        <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-12 mb-12 md:mb-20 pb-8 md:pb-12 border-b border-[#30363d]">
+          <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-8 text-center sm:text-left">
+            <img src={stats.avatarUrl} className="w-20 h-20 md:w-28 md:h-28 rounded-full border-4 border-[#30363d] grayscale" alt={stats.username} />
             <div>
-              <h4 className="text-4xl font-display font-black text-white mb-2">@{stats.username}</h4>
-              <p className="text-[#39d353] font-mono text-base tracking-widest uppercase font-bold">{insights.archetype}</p>
+              <h4 className="text-2xl md:text-4xl font-display font-black text-white mb-1 md:mb-2">@{stats.username}</h4>
+              <p className="text-[#39d353] font-mono text-sm md:text-base tracking-widest uppercase font-bold">{insights.archetype}</p>
             </div>
           </div>
-          <div className="md:text-right flex flex-col justify-center">
-            <span className="text-[11px] font-mono text-[#484f58] uppercase tracking-[0.6em] mb-3">Classification</span>
-            <p className="text-xl text-[#c9d1d9] font-light italic leading-relaxed max-w-sm md:ml-auto">
+          <div className="text-center md:text-right flex flex-col justify-center">
+            <span className="text-[10px] md:text-[11px] font-mono text-[#484f58] uppercase tracking-[0.4em] md:tracking-[0.6em] mb-2 md:mb-3">Classification</span>
+            <p className="text-base md:text-xl text-[#c9d1d9] font-light italic leading-relaxed max-w-sm mx-auto md:ml-auto">
               "{insights.archetypeDescription}"
             </p>
           </div>
@@ -133,9 +148,11 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
         <section className="mb-24 relative z-10">
           <h5 className="text-[11px] font-mono text-[#39d353] uppercase tracking-[0.7em] mb-10 font-black">Section I // The Narrative</h5>
           <div className="bg-[#161b22]/30 border border-[#30363d] p-12 rounded-[3rem]">
-            <p 
+            <div 
               className="text-lg md:text-xl font-display text-[#f0f6fc] leading-relaxed font-light italic opacity-95"
-              dangerouslySetInnerHTML={{ __html: highlightText(insights.narrative) }}
+              dangerouslySetInnerHTML={{ 
+                __html: `<p class="mb-6">${highlightText(insights.narrative)}</p>`
+              }}
             />
           </div>
         </section>
@@ -172,10 +189,10 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
           </section>
         </div>
 
-        {/* Section IV */}
-        <section className="mb-24">
-          <h5 className="text-[11px] font-mono text-[#ff7b72] uppercase tracking-[0.7em] mb-10 font-black">Section IV // Core Contribution Metrics</h5>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        {/* Section IV - Mobile Optimized */}
+        <section className="mb-16 md:mb-24 px-2 md:px-0">
+          <h5 className="text-[11px] font-mono text-[#ff7b72] uppercase tracking-[0.5em] md:tracking-[0.7em] mb-8 md:mb-10 font-black">Section IV // Core Contribution Metrics</h5>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
             {[
               { label: 'Total Contributions', val: stats.totalCommits },
               { label: 'Active Cycle Days', val: stats.activeDays },
@@ -186,34 +203,34 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
               { label: 'Followers', val: stats.followers },
               { label: 'Following', val: stats.following },
             ].map((m, i) => (
-              <div key={i} className="p-10 rounded-[2.5rem] bg-[#161b22]/40 border border-[#30363d] text-center shadow-xl hover:scale-105 transition-transform duration-500 flex flex-col justify-center items-center">
-                <span className="block text-3xl lg:text-4xl font-display font-black text-white mb-3 whitespace-nowrap">{m.val}</span>
-                <span className="text-[10px] text-[#484f58] uppercase font-mono tracking-widest font-black leading-tight break-words max-w-[140px]">{m.label}</span>
+              <div key={i} className="p-4 md:p-10 rounded-2xl md:rounded-[2.5rem] bg-[#161b22]/40 border border-[#30363d] text-center shadow-xl hover:scale-105 transition-transform duration-500 flex flex-col justify-center items-center">
+                <span className="block text-xl md:text-3xl lg:text-4xl font-display font-black text-white mb-2 md:mb-3 whitespace-nowrap">{m.val}</span>
+                <span className="text-[8px] md:text-[10px] text-[#484f58] uppercase font-mono tracking-widest font-black leading-tight break-words max-w-[100px] md:max-w-[140px] text-center">{m.label}</span>
               </div>
             ))}
           </div>
 
-          {/* Profile Information Row */}
+          {/* Profile Information Row - Mobile Optimized */}
           {(stats.bio || stats.company || stats.location) && (
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="mt-8 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 px-2 md:px-0">
               {stats.bio && (
-                <div className="p-6 rounded-2xl bg-white/5 border border-white/5">
-                  <h6 className="text-[10px] font-mono text-[#8b949e] uppercase tracking-widest mb-3 font-black">Bio</h6>
-                  <p className="text-sm text-white leading-relaxed">{stats.bio}</p>
+                <div className="p-4 md:p-6 rounded-xl md:rounded-2xl bg-white/5 border border-white/5">
+                  <h6 className="text-[9px] md:text-[10px] font-mono text-[#8b949e] uppercase tracking-widest mb-2 md:mb-3 font-black">Bio</h6>
+                  <p className="text-xs md:text-sm text-white leading-relaxed">{stats.bio}</p>
                 </div>
               )}
               
               {stats.company && (
-                <div className="p-6 rounded-2xl bg-white/5 border border-white/5">
-                  <h6 className="text-[10px] font-mono text-[#8b949e] uppercase tracking-widest mb-3 font-black">Company</h6>
-                  <p className="text-sm text-white font-medium">{stats.company}</p>
+                <div className="p-4 md:p-6 rounded-xl md:rounded-2xl bg-white/5 border border-white/5">
+                  <h6 className="text-[9px] md:text-[10px] font-mono text-[#8b949e] uppercase tracking-widest mb-2 md:mb-3 font-black">Company</h6>
+                  <p className="text-xs md:text-sm text-white font-medium">{stats.company}</p>
                 </div>
               )}
               
               {stats.location && (
-                <div className="p-6 rounded-2xl bg-white/5 border border-white/5">
-                  <h6 className="text-[10px] font-mono text-[#8b949e] uppercase tracking-widest mb-3 font-black">Location</h6>
-                  <p className="text-sm text-white font-medium">{stats.location}</p>
+                <div className="p-4 md:p-6 rounded-xl md:rounded-2xl bg-white/5 border border-white/5">
+                  <h6 className="text-[9px] md:text-[10px] font-mono text-[#8b949e] uppercase tracking-widest mb-2 md:mb-3 font-black">Location</h6>
+                  <p className="text-xs md:text-sm text-white font-medium">{stats.location}</p>
                 </div>
               )}
             </div>
@@ -306,25 +323,25 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
           </div>
         </section>
 
-        {/* Monthly Activity Section - Simple 12 Block Row */}
-        <section className="mb-24">
-          <h5 className="text-sm font-mono text-[#8b949e] uppercase tracking-[0.5em] mb-8 font-black text-center">2025 Monthly Activity</h5>
+        {/* Monthly Activity Section - Mobile Optimized */}
+        <section className="mb-16 md:mb-24 px-2 md:px-0">
+          <h5 className="text-sm md:text-base font-mono text-[#8b949e] uppercase tracking-[0.3em] md:tracking-[0.5em] mb-6 md:mb-8 font-black text-center">2025 Monthly Activity</h5>
           
           {/* Disclaimer */}
-          <div className="mb-8 text-center">
-            <p className="text-xs font-mono text-[#6e7681] italic max-w-2xl mx-auto leading-relaxed">
+          <div className="mb-6 md:mb-8 text-center px-4">
+            <p className="text-[10px] md:text-xs font-mono text-[#6e7681] italic max-w-2xl mx-auto leading-relaxed">
               ⚠️ Limited to public events from GitHub's API (~90 days). Actual GitHub contribution count may be higher due to private repos and older activity.
             </p>
           </div>
           
-          <div className="flex flex-col items-center space-y-6">
-            <div className="w-full max-w-2xl">
+          <div className="flex flex-col items-center space-y-4 md:space-y-6">
+            <div className="w-full max-w-sm md:max-w-2xl">
               {/* Simple Monthly Blocks */}
-              <div className="p-4 bg-[#161b22]/20 rounded-xl">
+              <div className="p-3 md:p-4 bg-[#161b22]/20 rounded-xl">
                 {stats.contributionGrid && stats.contributionGrid.length > 0 ? (
-                  <div className="space-y-3">
-                    {/* Single Row of 12 Monthly Blocks - Bigger and More Visible */}
-                    <div className="flex justify-center items-center gap-2 flex-wrap">
+                  <div className="space-y-3 md:space-y-4">
+                    {/* Mobile: 2 rows of 6 blocks, Desktop: Single row of 12 blocks */}
+                    <div className="grid grid-cols-6 md:flex md:justify-center md:items-center gap-1 md:gap-2 justify-items-center">
                       {stats.contributionGrid.map((month, i) => {
                         const getActivityColor = (level: number) => {
                           switch (level) {
@@ -339,14 +356,14 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
 
                         return (
                           <div key={i} className="group relative">
-                            {/* Monthly Block - Bigger and More Visible */}
+                            {/* Monthly Block - Responsive sizing */}
                             <div
-                              className="w-8 h-8 rounded cursor-pointer transition-all hover:scale-110 border border-[#30363d]/20"
+                              className="w-6 h-6 md:w-8 md:h-8 rounded cursor-pointer transition-all hover:scale-110 border border-[#30363d]/20"
                               style={{ backgroundColor: getActivityColor(month.level) }}
                               title={`${month.month}: ${month.count} contributions`}
                             >
-                              {/* Tooltip on hover */}
-                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-[#21262d] text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                              {/* Tooltip on hover - Hidden on mobile */}
+                              <div className="hidden md:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-[#21262d] text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
                                 {month.month}: {month.count} contributions
                               </div>
                             </div>
@@ -355,28 +372,28 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
                       })}
                     </div>
                     
-                    {/* Month Labels Row - Bigger Text */}
-                    <div className="flex justify-center items-center gap-2 mt-3">
+                    {/* Month Labels Row - Responsive */}
+                    <div className="grid grid-cols-6 md:flex md:justify-center md:items-center gap-1 md:gap-2 mt-2 md:mt-3 justify-items-center">
                       {stats.contributionGrid.map((month, i) => (
-                        <div key={i} className="w-8 text-center">
-                          <span className="text-xs font-mono text-[#8b949e] font-medium">
+                        <div key={i} className="w-6 md:w-8 text-center">
+                          <span className="text-[10px] md:text-xs font-mono text-[#8b949e] font-medium">
                             {month.month.charAt(0)}
                           </span>
                         </div>
                       ))}
                     </div>
                     
-                    {/* Legend - Bigger Squares */}
-                    <div className="flex items-center justify-center mt-8 space-x-3">
-                      <span className="text-xs font-mono text-[#8b949e]">Less</span>
+                    {/* Legend - Mobile optimized */}
+                    <div className="flex items-center justify-center mt-6 md:mt-8 space-x-2 md:space-x-3">
+                      <span className="text-[10px] md:text-xs font-mono text-[#8b949e]">Less</span>
                       <div className="flex space-x-1">
-                        <div className="w-4 h-4 rounded-sm" style={{ backgroundColor: '#161b22' }}></div>
-                        <div className="w-4 h-4 rounded-sm" style={{ backgroundColor: '#0e4429' }}></div>
-                        <div className="w-4 h-4 rounded-sm" style={{ backgroundColor: '#006d32' }}></div>
-                        <div className="w-4 h-4 rounded-sm" style={{ backgroundColor: '#26a641' }}></div>
-                        <div className="w-4 h-4 rounded-sm" style={{ backgroundColor: '#39d353' }}></div>
+                        <div className="w-3 h-3 md:w-4 md:h-4 rounded-sm" style={{ backgroundColor: '#161b22' }}></div>
+                        <div className="w-3 h-3 md:w-4 md:h-4 rounded-sm" style={{ backgroundColor: '#0e4429' }}></div>
+                        <div className="w-3 h-3 md:w-4 md:h-4 rounded-sm" style={{ backgroundColor: '#006d32' }}></div>
+                        <div className="w-3 h-3 md:w-4 md:h-4 rounded-sm" style={{ backgroundColor: '#26a641' }}></div>
+                        <div className="w-3 h-3 md:w-4 md:h-4 rounded-sm" style={{ backgroundColor: '#39d353' }}></div>
                       </div>
-                      <span className="text-xs font-mono text-[#8b949e]">More</span>
+                      <span className="text-[10px] md:text-xs font-mono text-[#8b949e]">More</span>
                     </div>
                   </div>
                 ) : (
@@ -388,16 +405,16 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
                   </div>
                 )}
                 
-                {/* Activity Summary with Comparison */}
+                {/* Activity Summary with Comparison - Mobile optimized */}
                 {stats.contributionGrid && (
-                  <div className="mt-6 text-center space-y-2">
-                    <p className="text-xs font-mono text-[#8b949e]">
+                  <div className="mt-4 md:mt-6 text-center space-y-1 md:space-y-2 px-2">
+                    <p className="text-[10px] md:text-xs font-mono text-[#8b949e] leading-relaxed">
                       {stats.contributionGrid.filter(month => month.count > 0).length} active months • {stats.contributionGrid.reduce((sum, month) => sum + month.count, 0)} detected contributions
                     </p>
-                    <p className="text-[10px] font-mono text-[#6e7681] opacity-60">
+                    <p className="text-[9px] md:text-[10px] font-mono text-[#6e7681] opacity-60 leading-relaxed">
                       Peak: {stats.contributionGrid.reduce((max, month) => month.count > max.count ? month : max, stats.contributionGrid[0])?.month} ({stats.contributionGrid.reduce((max, month) => Math.max(max, month.count), 0)} contributions)
                     </p>
-                    <p className="text-[9px] font-mono text-[#ff7b72] opacity-80">
+                    <p className="text-[8px] md:text-[9px] font-mono text-[#ff7b72] opacity-80 leading-relaxed">
                       Note: GitHub's official count may be higher due to private activity
                     </p>
                   </div>

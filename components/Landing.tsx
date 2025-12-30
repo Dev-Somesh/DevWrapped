@@ -122,20 +122,20 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
         }
       />
 
-      {/* Top Branding */}
-      <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-center pointer-events-none z-50">
-        <div className="flex items-center gap-3 pointer-events-auto">
-          <div className="w-8 h-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-lg flex items-center justify-center shadow-2xl">
-            <svg height="18" viewBox="0 0 16 16" width="18" fill="white">
+      {/* Top Branding - Mobile Optimized */}
+      <nav className="fixed top-0 left-0 w-full p-4 md:p-8 flex justify-between items-center pointer-events-none z-50">
+        <div className="flex items-center gap-2 md:gap-3 pointer-events-auto">
+          <div className="w-6 h-6 md:w-8 md:h-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-lg flex items-center justify-center shadow-2xl">
+            <svg height="14" width="14" className="md:w-[18px] md:h-[18px]" viewBox="0 0 16 16" fill="white">
               <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
             </svg>
           </div>
           <div className="flex flex-col leading-none">
-            <span className="text-white font-black text-xs tracking-tighter uppercase">DevWrapped</span>
-            <span className="text-[#39d353] font-mono text-[7px] tracking-[0.4em] opacity-60">MMXXV</span>
+            <span className="text-white font-black text-[10px] md:text-xs tracking-tighter uppercase">DevWrapped</span>
+            <span className="text-[#39d353] font-mono text-[6px] md:text-[7px] tracking-[0.3em] md:tracking-[0.4em] opacity-60">MMXXV</span>
           </div>
         </div>
-        <div className="hidden md:flex gap-4 pointer-events-auto">
+        <div className="hidden lg:flex gap-4 pointer-events-auto">
           {features.map((f, i) => (
             <div key={i} className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/5 text-[9px] font-mono text-[#8b949e] uppercase tracking-widest">
               <span className="text-[#39d353]">{f.icon}</span> {f.title}
@@ -144,38 +144,38 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
         </div>
       </nav>
 
-      {/* Main Content Stack */}
-      <div className="max-w-5xl w-full flex flex-col items-center text-center relative z-10">
+      {/* Main Content Stack - Mobile Optimized */}
+      <div className="max-w-5xl w-full flex flex-col items-center text-center relative z-10 px-4 md:px-0">
         
-        <div className="mb-16 space-y-6">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-2">
-            <span className="text-[#8b949e] font-mono text-[9px] uppercase tracking-[0.5em] font-black">
+        <div className="mb-12 md:mb-16 space-y-4 md:space-y-6">
+          <div className="inline-block px-3 md:px-4 py-1 md:py-1.5 rounded-full bg-white/5 border border-white/10 mb-2">
+            <span className="text-[#8b949e] font-mono text-[8px] md:text-[9px] uppercase tracking-[0.4em] md:tracking-[0.5em] font-black">
               Engineering Year-in-Review
             </span>
           </div>
-          <h1 className="text-5xl md:text-[7.5rem] font-display font-black tracking-tighter text-[#f0f6fc] leading-[0.75] select-none">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[7.5rem] font-display font-black tracking-tighter text-[#f0f6fc] leading-[0.8] md:leading-[0.75] select-none">
             CELEBRATE<br />YOUR<br />
             <span className="animate-gradient text-transparent bg-clip-text bg-gradient-to-r from-[#39d353] via-[#58a6ff] to-[#bc8cff] drop-shadow-[0_0_40px_rgba(57,211,83,0.15)]">
               CODE JOURNEY.
             </span>
           </h1>
-          <p className="text-[#8b949e] text-lg md:text-xl font-light italic max-w-lg mx-auto leading-relaxed opacity-70">
+          <p className="text-[#8b949e] text-base md:text-lg lg:text-xl font-light italic max-w-sm md:max-w-lg mx-auto leading-relaxed opacity-70 px-4 md:px-0">
             Relive your 2025 coding milestones through a cinematic lens.
             One commit at a time.
           </p>
         </div>
 
-        {/* Action Card */}
-        <div className="w-full max-w-md relative group">
-          <div className="absolute -inset-1 bg-gradient-to-br from-[#39d353]/20 to-[#58a6ff]/20 rounded-[3rem] blur-2xl opacity-40 group-hover:opacity-70 transition duration-1000"></div>
+        {/* Action Card - Mobile Optimized */}
+        <div className="w-full max-w-sm md:max-w-md relative group">
+          <div className="absolute -inset-1 bg-gradient-to-br from-[#39d353]/20 to-[#58a6ff]/20 rounded-2xl md:rounded-[3rem] blur-2xl opacity-40 group-hover:opacity-70 transition duration-1000"></div>
           
-          <div className="relative bg-[#161b22]/80 backdrop-blur-3xl border border-[#30363d] p-8 md:p-10 rounded-[3rem] shadow-2xl">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="relative bg-[#161b22]/80 backdrop-blur-3xl border border-[#30363d] p-6 md:p-8 lg:p-10 rounded-2xl md:rounded-[3rem] shadow-2xl">
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
               <div className="space-y-3 text-left">
-                <label className="text-[10px] font-mono text-[#484f58] uppercase tracking-[0.3em] ml-4 font-black">Initialization Profile</label>
+                <label className="text-[9px] md:text-[10px] font-mono text-[#484f58] uppercase tracking-[0.2em] md:tracking-[0.3em] ml-3 md:ml-4 font-black">Initialization Profile</label>
                 <div className="relative group/input">
-                  <div className="absolute left-6 top-1/2 -translate-y-1/2 text-[#484f58] group-focus-within/input:text-[#39d353] transition-colors">
-                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                  <div className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 text-[#484f58] group-focus-within/input:text-[#39d353] transition-colors">
+                    <svg width="16" height="16" className="md:w-[18px] md:h-[18px]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
                   </div>
                   <input
                     type="text"
@@ -183,10 +183,10 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="GitHub Username"
                     required
-                    className="w-full bg-[#0d1117] border border-[#30363d] rounded-2xl pl-16 pr-6 py-5 text-[#f0f6fc] placeholder:text-[#484f58] focus:outline-none focus:ring-4 focus:ring-[#39d353]/5 focus:border-[#39d353] transition-all text-lg font-medium"
+                    className="w-full bg-[#0d1117] border border-[#30363d] rounded-xl md:rounded-2xl pl-12 md:pl-16 pr-4 md:pr-6 py-4 md:py-5 text-[#f0f6fc] placeholder:text-[#484f58] focus:outline-none focus:ring-4 focus:ring-[#39d353]/5 focus:border-[#39d353] transition-all text-base md:text-lg font-medium"
                   />
                 </div>
-                <p className="mt-3 ml-4 max-w-sm flex items-start gap-2 text-[10px] font-mono leading-relaxed text-[#c9d1d9]">
+                <p className="mt-3 ml-3 md:ml-4 max-w-sm flex items-start gap-2 text-[9px] md:text-[10px] font-mono leading-relaxed text-[#c9d1d9]">
                   <span className="mt-[2px] inline-flex h-3 w-3 items-center justify-center rounded-full bg-[#161b22] border border-[#238636] text-[8px] text-[#39d353]">
                     ✓
                   </span>
@@ -210,12 +210,13 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
 
               <button
                 type="submit"
-                className="group relative w-full bg-[#238636] hover:bg-[#2ea043] text-white font-black py-6 rounded-2xl transition-all shadow-xl active:scale-[0.98] overflow-hidden"
+                className="group relative w-full bg-[#238636] hover:bg-[#2ea043] text-white font-black py-4 md:py-6 rounded-xl md:rounded-2xl transition-all shadow-xl active:scale-[0.98] overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                <span className="relative flex items-center justify-center gap-3 text-xl tracking-tighter">
-                  GENERATE WRAPPED
-                  <svg className="w-6 h-6 transition-transform group-hover:translate-x-1" viewBox="0 0 16 16" fill="currentColor">
+                <span className="relative flex items-center justify-center gap-2 md:gap-3 text-base md:text-xl tracking-tighter">
+                  <span className="hidden sm:inline">GENERATE WRAPPED</span>
+                  <span className="sm:hidden">GENERATE</span>
+                  <svg className="w-5 h-5 md:w-6 md:h-6 transition-transform group-hover:translate-x-1" viewBox="0 0 16 16" fill="currentColor">
                     <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5Z"></path>
                   </svg>
                 </span>
@@ -225,15 +226,33 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
         </div>
 
         {/* Footer Meta */}
-        <div className="mt-20 flex flex-col items-center gap-4 opacity-20 relative z-10">
+        <div className="mt-16 md:mt-20 flex flex-col items-center gap-6 opacity-20 relative z-10">
           <div className="flex items-center gap-6">
             <span className="h-px w-8 bg-white"></span>
             <p className="text-[9px] font-mono uppercase tracking-[1em] text-white font-black">Secure_Core_Trace</p>
             <span className="h-px w-8 bg-white"></span>
           </div>
-          <p className="text-[10px] font-mono font-medium max-w-xs leading-relaxed text-white">
+          <p className="text-[10px] font-mono font-medium max-w-xs leading-relaxed text-white text-center">
             Powered by Google Gemini AI & GitHub Telemetry
           </p>
+          
+          {/* GitHub Star Call-to-Action */}
+          <div className="flex items-center gap-4 mt-4">
+            <a
+              href="https://github.com/Dev-Somesh/Dev-Wrapped"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#39d353] rounded-lg transition-all group"
+            >
+              <svg className="w-4 h-4 text-[#c9d1d9] group-hover:text-[#39d353]" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+              </svg>
+              <span className="text-[9px] font-mono font-black uppercase tracking-widest text-[#c9d1d9] group-hover:text-[#39d353]">
+                Star on GitHub
+              </span>
+            </a>
+            <span className="text-[8px] font-mono text-white/40">Open Source & Free</span>
+          </div>
         </div>
       </div>
     </div>

@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2025.1.1] - 2025-01-01
+
+### ✨ Added
+- **Enhanced Social Sharing System**: Redesigned sharing workflow with simplified UX
+- **Narrative Formatting**: Improved narrative display with proper paragraph breaks and highlighting
+- **Username Highlighting**: Added green highlighting for usernames and key data points in narratives
+- **Copy Personalized Text**: Single universal text copying for all social platforms
+- **Platform Quick Access**: Clean icon-based access to LinkedIn, X/Twitter, Instagram, and Reddit
+
+### 🔧 Changed
+- **Simplified Sharing Flow**: Removed duplicate social sharing sections
+- **LinkedIn Sharing**: Fixed LinkedIn sharing to work consistently like other platforms
+- **Mobile Optimization**: Improved responsive design for sharing components
+- **Text Highlighting**: Enhanced highlighting system for usernames, numbers, tech stack, and key terms
+- **Authentication**: Now works with public GitHub data only (no tokens required)
+
+### 🗑️ Removed
+- **PAT Token Authentication**: Completely removed GitHub Personal Access Token logic
+- **Copy Link Button**: Removed personalized link copying (no server storage needed)
+- **Duplicate Social Buttons**: Consolidated social sharing into single, clean interface
+- **Platform-Specific Pre-filled Content**: Simplified to universal text approach
+
+### 🐛 Fixed
+- **JSX Syntax Errors**: Resolved malformed JSX structures in ShareCard component
+- **LinkedIn Sharing**: Fixed LinkedIn sharing button functionality
+- **Narrative Display**: Fixed line break rendering in narrative sections
+- **Mobile Touch Targets**: Improved touch target sizes for mobile devices
+
+---
+
 ## [2025.1.0] - 2025-12-30
 
 ### 🎉 Initial Release

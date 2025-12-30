@@ -70,10 +70,16 @@ export const handler: Handler = async (event, context) => {
     2. archetypeDescription: A poetic 1-sentence definition.
     3. insights: 3 specific behavioral traces from their code activity.
     4. patterns: 2 high-level development rhythms detected.
-    5. narrative: A 3-paragraph cinematic story of their journey.
+    5. narrative: A well-formatted 3-paragraph story with line breaks. Include specific numbers like ${stats.totalCommits} contributions, ${stats.activeDays} active days, ${stats.streak} day streak, and mention ${stats.topLanguages[0]?.name || 'their primary language'}. Format with proper paragraph breaks using \\n\\n between paragraphs.
     6. cardInsight: A punchy 10-word quote for social sharing.
     
-    TONE: Professional, sophisticated, narrative-first.
+    FORMATTING REQUIREMENTS for narrative:
+    - Use \\n\\n to separate paragraphs
+    - Include specific data points: @${stats.username}, ${stats.totalCommits} contributions, ${stats.activeDays} days, ${stats.streak} streak
+    - Mention primary language: ${stats.topLanguages[0]?.name || 'JavaScript'}
+    - Make it personal and engaging
+    
+    TONE: Professional, sophisticated, narrative-first with data integration.
   `;
 
     const response = await ai.models.generateContent({
