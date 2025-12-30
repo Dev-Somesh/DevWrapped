@@ -81,8 +81,11 @@ For comprehensive documentation including architecture, deployment, API referenc
 
 - **Zero Data Retention**: No user data stored on servers
 - **Client-Side Processing**: All analysis happens in your browser
-- **Secure API Keys**: Server-side storage only
-- **No Tracking**: No analytics or cookies
+- **Public Data Only**: Uses only publicly available GitHub information
+- **Secure API Keys**: Server-side storage only, never exposed to clients
+- **No Authentication Required**: Works without GitHub login or tokens
+- **No Tracking**: No analytics, cookies, or user identification
+- **HTTPS Only**: All communications encrypted and secure
 
 ## 🌟 Features
 
@@ -92,14 +95,23 @@ For comprehensive documentation including architecture, deployment, API referenc
 - **📤 Export Capabilities**: High-quality image sharing for social media and portfolios
 - **⚡ Streamlined UX**: Direct flow from input to results - no unnecessary steps
 - **🔒 Privacy-First**: Zero data retention, client-side processing, no tracking
-- **📱 Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
+- **📱 Mobile Optimized**: Fully responsive design with touch-friendly interactions
 - **🎯 Professional Presentation**: Clean, modern interface with smooth animations
+
+### 📱 Mobile-First Design
+- **Responsive Layout**: Adapts perfectly to all screen sizes
+- **Touch-Friendly**: 44px minimum touch targets for optimal mobile experience
+- **Monthly Activity Grid**: 
+  - Desktop: Single row of 12 blocks
+  - Mobile: 2 rows of 6 blocks for better fit
+- **Optimized Performance**: Fast loading and smooth interactions on mobile devices
+- **Cross-Platform**: Works seamlessly on iOS, Android, and desktop browsers
 
 ### What You'll Get:
 - **Share Card**: Compact summary perfect for social media
 - **Development Dossier**: Detailed analysis with repository insights
 - **Tech Stack Visualization**: Color-coded badges showing your technology usage
-- **Activity Patterns**: Visual representation of your coding rhythm
+- **Activity Patterns**: Visual representation of your coding rhythm (2025 focus)
 - **AI-Generated Narrative**: Personalized story of your development journey
 
 ## 📸 Screenshots

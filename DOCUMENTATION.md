@@ -1,556 +1,648 @@
-# DevWrapped 2025 - Comprehensive Documentation
+# 📖 DevWrapped 2025 - Complete Documentation
 
 <div align="center">
-
-<h1 style="font-size: 3rem; font-weight: 900; letter-spacing: -0.05em;">
-  <span style="color: #39d353;">DEV</span><span style="color: #58a6ff;">_</span><span style="color: #bc8cff;">WRAPPED</span>
-</h1>
-
-<sub style="color: #8b949e;">2025 - Complete Developer Documentation</sub>
-
+  <h1>🎬 DevWrapped 2025</h1>
+  <p><em>Transform your GitHub journey into a cinematic year-in-review experience</em></p>
+  
+  ![Version](https://img.shields.io/badge/version-2025.1.0-39d353?style=flat-square)
+  ![React](https://img.shields.io/badge/React-19.2.3-61dafb?style=flat-square&logo=react)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.2-3178c6?style=flat-square&logo=typescript)
+  ![Mobile Optimized](https://img.shields.io/badge/Mobile-Optimized-ff7b72?style=flat-square&logo=mobile)
 </div>
+
+---
 
 ## 📋 Table of Contents
 
-1. [Project Overview](#project-overview)
-2. [Architecture](#architecture)
-3. [Installation & Setup](#installation--setup)
-4. [Environment Configuration](#environment-configuration)
-5. [Development Guide](#development-guide)
-6. [Deployment](#deployment)
-7. [API Documentation](#api-documentation)
-8. [Component Architecture](#component-architecture)
-9. [Security & Privacy](#security--privacy)
-10. [Performance Optimization](#performance-optimization)
-11. [Troubleshooting](#troubleshooting)
-12. [Contributing](#contributing)
+1. [🎯 Project Overview](#-project-overview)
+2. [🏗️ Architecture](#️-architecture)
+3. [🚀 Getting Started](#-getting-started)
+4. [📱 Mobile Optimization](#-mobile-optimization)
+5. [🔧 Configuration](#-configuration)
+6. [🎨 Features & Components](#-features--components)
+7. [🔌 API Integration](#-api-integration)
+8. [🚀 Deployment](#-deployment)
+9. [🐛 Troubleshooting](#-troubleshooting)
+10. [🤝 Contributing](#-contributing)
 
 ---
 
 ## 🎯 Project Overview
 
-**DevWrapped 2025** is an advanced Year-in-Review application that transforms GitHub activity data into compelling visual narratives using AI-powered insights. The application provides developers with a comprehensive analysis of their coding journey throughout 2025.
+**DevWrapped 2025** is a sophisticated web application that transforms GitHub activity data into personalized, AI-generated year-in-review experiences. Built with modern web technologies and powered by Google Gemini AI, it creates cinematic narratives from developer contributions.
 
-### Key Features
+### ✨ Key Features
 
-- **AI-Powered Analysis**: Uses Google Gemini AI to generate personalized developer insights
-- **Comprehensive GitHub Integration**: Analyzes commits, languages, repositories, and activity patterns
-- **Visual Data Presentation**: Beautiful cards and dossiers with interactive elements
-- **Privacy-First Architecture**: Zero data retention, client-side processing
-- **Streamlined User Experience**: Direct flow from input to results
-- **Export Capabilities**: High-quality image export for sharing
+- **🤖 AI-Powered Insights**: Personalized narratives using Google Gemini
+- **📊 Comprehensive Analytics**: Detailed GitHub activity analysis
+- **📱 Mobile-First Design**: Fully responsive across all devices
+- **🎨 Beautiful Visualizations**: GitHub-inspired design with smooth animations
+- **📤 Export Capabilities**: High-quality image generation for sharing
+- **🔒 Privacy-First**: No data retention, client-side processing
+- **⚡ Performance Optimized**: Fast loading and smooth interactions
 
-## 🎨 Visual Showcase
+### 🎭 What Users Get
 
-<div align="center">
-
-### Landing Experience
-<img src="./assets/devwrapped-hero.png" alt="DevWrapped Landing Page" width="700" />
-<p><em>Elegant landing page with animated GitHub logos and professional input interface</em></p>
-
-### Share Card Output
-<img src="./assets/devwrapped-2025-Dev-Somesh.png" alt="Share Card" width="500" />
-<p><em>Compact summary card perfect for social media sharing</em></p>
-
-### Detailed Analysis
-<img src="./assets/dev-dossier-2025-Dev-Somesh.png" alt="Development Dossier" width="700" />
-<p><em>Comprehensive dossier with repository analysis, tech stack, and activity visualization</em></p>
-
-</div>
-
-### Technology Stack
-
-- **Frontend**: React 19, TypeScript, Tailwind CSS
-- **AI Engine**: Google Gemini (Flash/Lite models)
-- **Backend**: Netlify Functions (Serverless)
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS with custom animations
-- **Export**: html-to-image library
+1. **Share Card**: Compact summary perfect for social media
+2. **Development Dossier**: Detailed analysis with repository insights
+3. **Monthly Activity Grid**: Visual contribution patterns
+4. **Tech Stack Visualization**: Color-coded technology usage
+5. **AI-Generated Narrative**: Personalized development story
 
 ---
 
 ## 🏗️ Architecture
 
-### System Architecture
+### 📁 Project Structure
 
 ```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   React Client  │    │ Netlify Functions│    │  External APIs  │
-│                 │    │                  │    │                 │
-│ ┌─────────────┐ │    │ ┌──────────────┐ │    │ ┌─────────────┐ │
-│ │ Landing     │ │    │ │ github-proxy │ │────┤ │ GitHub API  │ │
-│ │ Loading     │ │    │ │ gemini-proxy │ │    │ │ Gemini API  │ │
-│ │ ShareCard   │ │    │ └──────────────┘ │    │ └─────────────┘ │
-│ │ Dossier     │ │    └──────────────────┘    └─────────────────┘
-│ └─────────────┘ │
-└─────────────────┘
+devwrapped-2025/
+├── 📁 components/           # React components
+│   ├── 🎯 Landing.tsx       # Landing page with input form
+│   ├── 📊 DevelopmentDossier.tsx  # Main dossier component
+│   ├── 🎨 ShareCard.tsx     # Social media share card
+│   ├── ⏳ Loading.tsx       # Loading animation
+│   └── 📋 CreditsModal.tsx  # Credits and acknowledgments
+├── 📁 services/            # API and business logic
+│   ├── 🐙 githubService.ts  # GitHub API integration
+│   ├── 🤖 geminiService.ts  # Google Gemini AI integration
+│   └── 🔒 security.ts      # Security and logging utilities
+├── 📁 netlify/functions/   # Serverless functions
+│   ├── 🐙 github-proxy.ts  # GitHub API proxy
+│   └── 🤖 gemini-proxy.ts  # Gemini AI proxy
+├── 📁 assets/              # Static assets and images
+├── 🎨 index.css            # Global styles and mobile optimizations
+├── 📝 types.ts             # TypeScript type definitions
+├── ⚛️ App.tsx              # Main application component
+└── 🏠 index.tsx            # Application entry point
 ```
 
-### Data Flow
+### 🔄 Data Flow
 
-1. **User Input**: Username and optional PAT token
-2. **GitHub Data Fetch**: Serverless function fetches user data
-3. **AI Processing**: Gemini AI generates insights and narratives
-4. **Visualization**: React components render interactive cards
-5. **Export**: Users can export high-quality images
-
-### Component Hierarchy
-
+```mermaid
+graph TD
+    A[User Input] --> B[GitHub API]
+    B --> C[Data Processing]
+    C --> D[Gemini AI]
+    D --> E[UI Rendering]
+    E --> F[Export Generation]
 ```
-App.tsx
-├── BackgroundIcons (Animated GitHub logos)
-├── Landing (User input form)
-├── Loading (Analysis progress)
-└── Share Page
-    ├── ShareCard (Summary card with key stats)
-    └── DevelopmentDossier (Detailed analysis)
-```
+
+1. **User Input**: GitHub username submission
+2. **Data Fetching**: Parallel GitHub API calls for comprehensive data
+3. **Processing**: Centralized contribution calculation and analysis
+4. **AI Generation**: Gemini AI creates personalized insights
+5. **Rendering**: Dynamic UI with responsive components
+6. **Export**: High-quality image generation for sharing
 
 ---
 
-## 🚀 Installation & Setup
+## 🚀 Getting Started
 
-### Prerequisites
+### 📋 Prerequisites
 
-- Node.js 18+ 
-- npm or yarn
-- Git
-- Google Cloud account (for Gemini API)
-- Netlify account (for deployment)
+- **Node.js**: Version 18+ recommended
+- **npm**: Version 8+ or yarn
+- **Google Gemini API Key**: Required for AI features
+- **Modern Browser**: Chrome, Firefox, Safari, or Edge
 
-### Local Development Setup
+### 🛠️ Installation
 
-1. **Clone the repository**
+1. **Clone the Repository**
    ```bash
-   git clone <repository-url>
-   cd devwrapped-2025
+   git clone https://github.com/Dev-Somesh/Dev-Wrapped.git
+   cd Dev-Wrapped
    ```
 
-2. **Install dependencies**
+2. **Install Dependencies**
    ```bash
    npm install
    ```
 
-3. **Environment setup**
+3. **Environment Setup**
    ```bash
+   # Create .env file
    cp .env.example .env
-   # Edit .env with your API keys
+   
+   # Add your API keys
+   echo "GEMINI_API_KEY=your_gemini_api_key_here" >> .env
    ```
 
-4. **Start development server**
+4. **Development Server**
    ```bash
+   # Start Vite dev server
    npm run dev
-   # or for Netlify dev environment
+   
+   # Or start with Netlify functions
    npm run dev:netlify
    ```
 
-5. **Access the application**
-   - Local: `http://localhost:3000`
-   - Netlify Dev: `http://localhost:8888`
+5. **Production Build**
+   ```bash
+   npm run build
+   npm run preview
+   ```
 
----
-
-## 🔧 Environment Configuration
-
-### Required Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-# Google Gemini API Configuration
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Optional: GitHub Personal Access Token (for higher rate limits)
-GITHUB_TOKEN=your_github_token_here
-```
-
-### Netlify Environment Variables
-
-For production deployment, set these in Netlify Dashboard:
-
-1. Go to Site Settings → Environment Variables
-2. Add the following variables:
-   - `GEMINI_API_KEY`: Your Google Gemini API key
-   - `GITHUB_TOKEN`: (Optional) GitHub PAT for higher rate limits
-
-### API Key Setup
+### 🔑 API Keys Setup
 
 #### Google Gemini API Key
-1. Visit [Google AI Studio](https://ai.google.dev)
-2. Create a new project or select existing
-3. Enable Gemini API
-4. Generate API key
-5. Add to environment variables
+1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create a new API key
+3. Add to your `.env` file as `GEMINI_API_KEY`
 
-#### GitHub Token (Optional)
-1. Go to GitHub Settings → Developer Settings → Personal Access Tokens
-2. Generate new token with `public_repo` scope
-3. Add to environment variables
+**Note**: GitHub API access is public-only and doesn't require authentication.
 
 ---
 
-## 💻 Development Guide
+## 📱 Mobile Optimization
 
-### Project Structure
+DevWrapped 2025 is fully optimized for mobile devices with comprehensive responsive design.
 
+### 🎯 Mobile Features
+
+#### **Monthly Activity Grid**
+- **Desktop**: Single row of 12 blocks (8x8px each)
+- **Mobile**: 2 rows of 6 blocks (6x6px each) for better fit
+- **Touch-Friendly**: Optimized spacing and sizing
+- **Responsive Text**: Scales appropriately across devices
+
+#### **Landing Page**
+- **Responsive Typography**: Hero text scales from 7.5rem to 3xl on mobile
+- **Touch Targets**: All interactive elements meet 44px minimum
+- **Compact Navigation**: Smaller branding, hidden feature pills on mobile
+- **Optimized Forms**: Better input sizing and touch responsiveness
+
+#### **Development Dossier**
+- **Flexible Layout**: Profile info stacks vertically on mobile
+- **Grid Optimization**: Metrics display as 2x4 grid instead of 1x8
+- **Responsive Cards**: Smaller padding and text for mobile screens
+- **Mobile Export**: Shortened button text and optimized sizing
+
+### 📐 Responsive Breakpoints
+
+```css
+/* Mobile First Approach */
+/* Default: Mobile (< 640px) */
+.text-base { font-size: 1rem; }
+
+/* Tablet: sm (640px+) */
+@media (min-width: 640px) {
+  .sm:text-lg { font-size: 1.125rem; }
+}
+
+/* Desktop: md (768px+) */
+@media (min-width: 768px) {
+  .md:text-xl { font-size: 1.25rem; }
+}
+
+/* Large Desktop: lg (1024px+) */
+@media (min-width: 1024px) {
+  .lg:text-2xl { font-size: 1.5rem; }
+}
 ```
-devwrapped-2025/
-├── components/           # React components
-│   ├── Landing.tsx      # User input form
-│   ├── Loading.tsx      # Loading animation
-│   ├── ShareCard.tsx    # Summary card component
-│   └── DevelopmentDossier.tsx # Detailed analysis
-├── services/            # API services
-│   ├── githubService.ts # GitHub API integration
-│   ├── geminiService.ts # Gemini AI integration
-│   └── security.ts     # Security utilities
-├── netlify/functions/   # Serverless functions
-│   ├── github-proxy.ts # GitHub API proxy
-│   └── gemini-proxy.ts # Gemini API proxy
-├── types.ts            # TypeScript type definitions
-├── App.tsx             # Main application component
-├── index.tsx           # Application entry point
-└── index.css           # Global styles
+
+### 🎨 Mobile-Specific Optimizations
+
+#### **CSS Enhancements**
+```css
+/* Mobile touch improvements */
+@media (max-width: 768px) {
+  /* Improve touch targets */
+  button, a, input {
+    min-height: 44px;
+  }
+  
+  /* Prevent horizontal scroll */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  /* Optimize text rendering */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
 ```
 
-### Key Components
+#### **Performance Optimizations**
+- **Font Smoothing**: `-webkit-font-smoothing: antialiased`
+- **Text Size Adjust**: `-webkit-text-size-adjust: 100%` (prevents iOS zoom)
+- **Thinner Scrollbars**: 4px width on mobile vs 8px on desktop
+- **Touch Optimizations**: Removed tap highlights, improved responsiveness
 
-#### App.tsx
-Main application component managing:
-- Application state (step, stats, insights)
-- User flow navigation
-- Error handling
-- Background animations
+---
 
-#### ShareCard.tsx
-Summary card component featuring:
-- Key statistics display
-- Export functionality
-- Responsive design
-- GitHub logo backgrounds
+## 🔧 Configuration
 
-#### DevelopmentDossier.tsx
-Detailed analysis component including:
-- Repository cards
-- Activity grid visualization
-- Tech stack cloud
-- Professional profile section
-- Comprehensive metrics
+### 🌍 Environment Variables
 
-### Services
+```bash
+# Required
+GEMINI_API_KEY=your_gemini_api_key_here
 
-#### githubService.ts
-Handles GitHub API integration:
-- User profile data
-- Repository information
-- Commit activity analysis
-- Language statistics
-- Rate limit handling
+# Optional (for development)
+GITHUB_TOKEN=your_github_token_here  # Not used in production
+```
 
-#### geminiService.ts
-Manages AI-powered insights:
-- Prompt engineering
-- Response parsing
-- Error handling
-- Model selection (Flash/Lite)
+### ⚙️ Netlify Configuration
 
-### Styling Guidelines
+**netlify.toml**
+```toml
+[build]
+  command = "npm run build"
+  publish = "dist"
 
-- **Tailwind CSS**: Utility-first CSS framework
-- **Color Scheme**: GitHub-inspired dark theme
-- **Typography**: Space Grotesk (display), JetBrains Mono (code)
-- **Animations**: CSS animations for smooth transitions
-- **Responsive**: Mobile-first responsive design
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  NODE_VERSION = "18"
+```
+
+### 🎛️ Vite Configuration
+
+**vite.config.ts**
+```typescript
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ai: ['@google/genai'],
+          utils: ['html-to-image']
+        }
+      }
+    }
+  },
+  server: {
+    port: 3000,
+    host: true
+  }
+})
+```
+
+---
+
+## 🎨 Features & Components
+
+### 🎯 Core Components
+
+#### **1. Landing Component**
+- **Purpose**: User input and initial interaction
+- **Features**: 
+  - Animated background with floating GitHub icons
+  - Responsive form with validation
+  - Feature preview cards (hidden on mobile)
+  - Professional branding and navigation
+
+#### **2. DevelopmentDossier Component**
+- **Purpose**: Main content display with comprehensive analysis
+- **Sections**:
+  - **Header**: User profile with archetype classification
+  - **Section I**: AI-generated narrative
+  - **Section II**: Intelligence observations
+  - **Section III**: Behavioral patterns
+  - **Section IV**: Core contribution metrics (mobile: 2x4 grid)
+  - **Section V**: Technical DNA landscape
+  - **Monthly Activity**: 2025 contribution visualization
+- **Export**: High-quality PNG generation
+
+#### **3. ShareCard Component**
+- **Purpose**: Compact social media sharing format
+- **Features**:
+  - Key statistics summary
+  - Archetype display
+  - Export functionality
+  - Mobile-optimized layout
+
+### 📊 Data Processing
+
+#### **Centralized Contribution Calculation**
+```typescript
+const calculateContributionStats = (events: any[], repos: any[]) => {
+  const year2025Start = new Date('2025-01-01');
+  const today = new Date();
+  
+  // Filter events for 2025 only
+  const events2025 = events.filter(event => {
+    const eventDate = new Date(event.created_at);
+    return eventDate >= year2025Start && eventDate <= today;
+  });
+  
+  // Process contributions with consistent logic
+  // ... detailed implementation
+  
+  return {
+    totalContributions,
+    activeDays,
+    monthlyActivity,
+    // ... other metrics
+  };
+};
+```
+
+#### **Monthly Activity Grid**
+- **Desktop**: Single row of 12 monthly blocks
+- **Mobile**: 2 rows of 6 blocks each
+- **Color Coding**: 5-level GitHub-style activity visualization
+- **Data Source**: Centralized contribution calculation
+- **Responsive**: Adapts sizing and layout per device
+
+---
+
+## 🔌 API Integration
+
+### 🐙 GitHub API Integration
+
+#### **Public Data Only**
+- **No Authentication**: Uses public GitHub API endpoints
+- **Rate Limits**: 60 requests/hour per IP (unauthenticated)
+- **Data Sources**:
+  - User profile information
+  - Public repositories
+  - Public events (last ~90 days)
+  - Commit search (2025 data)
+
+#### **Key Endpoints**
+```typescript
+// User profile
+GET /users/{username}
+
+// Public repositories
+GET /users/{username}/repos?sort=updated&per_page=100
+
+// Public events
+GET /users/{username}/events/public?per_page=100
+
+// Commit search (2025)
+GET /search/commits?q=author:{username}+committer-date:>=2025-01-01
+```
+
+#### **Data Processing Pipeline**
+1. **Parallel Fetching**: Multiple API calls for comprehensive data
+2. **Pagination Handling**: Automatic pagination for repositories and events
+3. **2025 Focus**: Filters all data to 2025 activity only
+4. **Centralized Calculation**: Consistent metrics across all components
+5. **Error Handling**: Graceful degradation with informative messages
+
+### 🤖 Google Gemini AI Integration
+
+#### **AI Models**
+- **Primary**: `gemini-3-flash-preview` (full features)
+- **Fallback**: `gemini-3-flash-lite` (economy mode)
+
+#### **AI-Generated Content**
+```typescript
+interface AIInsights {
+  archetype: string;              // Developer archetype (e.g., "The Night Owl")
+  archetypeDescription: string;   // Brief archetype explanation
+  narrative: string;              // Personalized development story
+  cardInsight: string;           // One-line insight for share card
+  insights: string[];            // Key observations
+  patterns: string[];            // Behavioral patterns
+}
+```
+
+#### **Prompt Engineering**
+- **Context-Aware**: Uses actual GitHub data for personalization
+- **Professional Tone**: Maintains technical accuracy with engaging narrative
+- **Structured Output**: Consistent JSON format for reliable parsing
+- **Error Handling**: Fallback content for AI failures
 
 ---
 
 ## 🚀 Deployment
 
-### Netlify Deployment
+### 🌐 Netlify Deployment
 
-1. **Connect Repository**
-   - Link your GitHub repository to Netlify
-   - Set build command: `npm run build`
-   - Set publish directory: `dist`
+#### **Automatic Deployment**
+1. **Connect Repository**: Link GitHub repo to Netlify
+2. **Build Settings**:
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+   - Node version: `18`
+3. **Environment Variables**: Add `GEMINI_API_KEY` in Netlify dashboard
+4. **Deploy**: Automatic deployment on git push
 
-2. **Environment Variables**
-   - Add `GEMINI_API_KEY` in Site Settings
-   - Add `GITHUB_TOKEN` (optional)
+#### **Manual Deployment**
+```bash
+# Build for production
+npm run build
 
-3. **Deploy**
-   - Automatic deployment on git push
-   - Preview deployments for pull requests
-
-### Build Configuration
-
-The `netlify.toml` file configures:
-- Build settings
-- Function directory
-- Development server settings
-- Timeout configurations
-
-### Performance Considerations
-
-- **Function Timeouts**: Optimized for Netlify's 10s limit
-- **Bundle Size**: Optimized with Vite's tree shaking
-- **Image Optimization**: Efficient SVG usage
-- **Lazy Loading**: Components loaded on demand
-
----
-
-## 📡 API Documentation
-
-### GitHub Proxy Function
-
-**Endpoint**: `/.netlify/functions/github-proxy`
-
-**Purpose**: Securely proxy GitHub API requests
-
-**Parameters**:
-- `username`: GitHub username (required)
-- `token`: Personal access token (optional)
-
-**Response**: GitHub user data and repository information
-
-### Gemini Proxy Function
-
-**Endpoint**: `/.netlify/functions/gemini-proxy`
-
-**Purpose**: Process GitHub data through Gemini AI
-
-**Parameters**:
-- `stats`: GitHub statistics object
-- `model`: AI model selection
-
-**Response**: AI-generated insights and narratives
-
-### Rate Limiting
-
-- **GitHub API**: 60 requests/hour (unauthenticated), 5000/hour (authenticated)
-- **Gemini API**: Based on your Google Cloud quotas
-- **Function Limits**: 10s timeout per function call
-
----
-
-## 🧩 Component Architecture
-
-### State Management
-
-The application uses React's built-in state management:
-
-```typescript
-// Main application state
-const [step, setStep] = useState<Step>(Step.Entry);
-const [stats, setStats] = useState<GitHubStats | null>(null);
-const [insights, setInsights] = useState<AIInsights | null>(null);
-const [error, setError] = useState<string | null>(null);
+# Deploy to Netlify
+npx netlify deploy --prod --dir=dist
 ```
 
-### Type Definitions
+#### **Serverless Functions**
+- **GitHub Proxy**: `/.netlify/functions/github-proxy`
+- **Gemini Proxy**: `/.netlify/functions/gemini-proxy`
+- **CORS Handling**: Automatic CORS headers for cross-origin requests
+- **Error Handling**: Structured error responses with logging
 
-Key TypeScript interfaces:
+### 🔒 Security Considerations
 
-```typescript
-interface GitHubStats {
-  username: string;
-  name: string;
-  bio: string;
-  company: string;
-  location: string;
-  followers: number;
-  following: number;
-  publicRepos: number;
-  // ... additional fields
-}
+#### **API Key Protection**
+- **Server-Side Only**: API keys stored in Netlify environment
+- **Proxy Pattern**: Client never directly accesses external APIs
+- **Rate Limiting**: Built-in protection against abuse
+- **Error Sanitization**: No sensitive data in client-side errors
 
-interface AIInsights {
-  summary: string;
-  archetype: string;
-  narrative: string;
-  // ... additional fields
-}
-```
-
-### Component Props
-
-Components receive data through well-defined props:
-
-```typescript
-interface ShareCardProps {
-  stats: GitHubStats;
-  insights: AIInsights;
-  onReset: () => void;
-}
-```
-
----
-
-## 🔒 Security & Privacy
-
-### Privacy-First Design
-
-- **Zero Data Retention**: No user data stored on servers
+#### **Privacy Protection**
+- **No Data Storage**: Zero user data retention
 - **Client-Side Processing**: All analysis happens in browser
-- **Secure API Keys**: Server-side storage only
-- **No Tracking**: No analytics or tracking cookies
-
-### Security Measures
-
-- **API Key Protection**: Never exposed to client
-- **Input Validation**: Sanitized user inputs
-- **Rate Limiting**: Prevents API abuse
-- **Error Handling**: Secure error messages
-
-### GDPR Compliance
-
-- No personal data collection
-- No cookies or tracking
-- User data processed locally
-- No data retention policies needed
-
----
-
-## ⚡ Performance Optimization
-
-### Bundle Optimization
-
-- **Tree Shaking**: Unused code elimination
-- **Code Splitting**: Dynamic imports where beneficial
-- **Asset Optimization**: Optimized SVGs and images
-
-### Runtime Performance
-
-- **Memoization**: React.useMemo for expensive calculations
-- **Lazy Loading**: Components loaded on demand
-- **Efficient Rendering**: Optimized re-render cycles
-
-### Network Optimization
-
-- **API Batching**: Minimize API calls
-- **Caching**: Browser caching for static assets
-- **Compression**: Gzip compression enabled
+- **No Tracking**: No analytics, cookies, or user identification
+- **Secure Headers**: HTTPS-only, security headers enabled
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Common Issues
+### ❌ Common Issues
 
-#### API Key Errors
+#### **1. API Key Errors**
 ```
-Error: AUTHENTICATION_FAILED: API key configuration error
+ERROR: GEMINI_CONFIG_ERROR: GEMINI_API_KEY is not configured
 ```
-**Solution**: Verify `GEMINI_API_KEY` is set in Netlify environment variables
+**Solution**: 
+- Verify API key is set in `.env` file
+- For Netlify: Add key in dashboard environment variables
+- Restart development server after adding key
 
-#### Rate Limit Errors
+#### **2. GitHub Rate Limiting**
 ```
-Error: RATE_LIMIT: Service quota reached
+ERROR: GITHUB_RATE_LIMIT: API rate limit exceeded
 ```
-**Solution**: Wait for rate limit reset or add GitHub token
+**Solution**:
+- Wait for rate limit reset (1 hour for public API)
+- Consider using GitHub token for higher limits (development only)
+- Implement request caching for repeated testing
 
-#### Build Failures
+#### **3. Mobile Layout Issues**
+**Symptoms**: Content overflow, poor touch targets, zoom issues
+**Solution**:
+- Verify viewport meta tag: `<meta name="viewport" content="width=device-width, initial-scale=1.0">`
+- Check responsive classes: `sm:`, `md:`, `lg:` prefixes
+- Test on actual devices, not just browser dev tools
+
+#### **4. Export/Image Generation Failures**
 ```
-Error: Module not found
+ERROR: Export failed, falling back to print
 ```
-**Solution**: Run `npm install` and check dependencies
+**Solution**:
+- Check `html-to-image` library compatibility
+- Verify DOM element exists before export
+- Test with different browsers (Chrome recommended)
 
-### Debug Mode
+### 🔍 Debug Mode
 
-Enable debug logging by setting:
-```env
-NODE_ENV=development
+#### **Enable Detailed Logging**
+```typescript
+// In services/security.ts
+const DEBUG_MODE = true; // Enable for development
+
+// Enhanced logging
+console.log('GitHub API Response:', response);
+console.log('Contribution Stats:', stats);
 ```
 
-### Performance Issues
+#### **Network Debugging**
+1. Open browser DevTools (F12)
+2. Go to Network tab
+3. Filter by "Fetch/XHR"
+4. Monitor API calls and responses
+5. Check for CORS errors or failed requests
 
-- Check network tab for slow API calls
-- Monitor console for React warnings
-- Use React DevTools for component analysis
+### 📊 Performance Monitoring
+
+#### **Key Metrics to Monitor**
+- **API Response Times**: GitHub and Gemini API calls
+- **Bundle Size**: Keep under 1MB for optimal loading
+- **Mobile Performance**: Test on 3G networks
+- **Memory Usage**: Monitor for memory leaks in long sessions
 
 ---
 
 ## 🤝 Contributing
 
-### Development Workflow
+### 🛠️ Development Setup
 
-1. **Fork the repository**
-2. **Create feature branch**
+1. **Fork the Repository**
+2. **Create Feature Branch**
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b feature/amazing-feature
    ```
-3. **Make changes and test**
-4. **Commit with conventional commits**
+3. **Make Changes**
+4. **Test Thoroughly**
+   - Desktop and mobile testing
+   - Multiple GitHub usernames
+   - Error scenarios
+5. **Commit with Conventional Commits**
    ```bash
-   git commit -m "feat: add new feature"
+   git commit -m "feat: add amazing new feature"
    ```
-5. **Push and create pull request**
+6. **Push and Create PR**
 
-### Code Standards
+### 📝 Code Standards
 
-- **TypeScript**: Strict type checking enabled
-- **ESLint**: Code linting rules
-- **Prettier**: Code formatting
-- **Conventional Commits**: Commit message format
+#### **TypeScript**
+- Strict mode enabled
+- Proper type definitions
+- No `any` types without justification
+- Interface definitions for all data structures
 
-### Testing
+#### **React**
+- Functional components with hooks
+- Proper dependency arrays for useEffect
+- Memoization for expensive calculations
+- Accessible components (ARIA labels, semantic HTML)
 
-- Manual testing for UI components
-- API endpoint testing
-- Cross-browser compatibility testing
+#### **CSS/Styling**
+- Tailwind CSS utility classes
+- Mobile-first responsive design
+- Consistent spacing and typography
+- Dark theme optimized
+
+### 🧪 Testing Guidelines
+
+#### **Manual Testing Checklist**
+- [ ] Landing page loads correctly
+- [ ] Form validation works
+- [ ] GitHub data fetching succeeds
+- [ ] AI insights generate properly
+- [ ] Mobile layout is responsive
+- [ ] Export functionality works
+- [ ] Error handling is graceful
+
+#### **Test Cases**
+- **Valid usernames**: Active GitHub users with 2025 activity
+- **Invalid usernames**: Non-existent users, empty input
+- **Edge cases**: Users with no 2025 activity, private profiles
+- **Mobile testing**: Various screen sizes and orientations
+- **Network issues**: Slow connections, API failures
+
+---
+
+## 📚 Additional Resources
+
+### 🔗 External Documentation
+- [React 19 Documentation](https://react.dev/)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Google Gemini AI Documentation](https://ai.google.dev/docs)
+- [GitHub API Documentation](https://docs.github.com/en/rest)
+- [Netlify Functions Documentation](https://docs.netlify.com/functions/overview/)
+
+### 🎨 Design Resources
+- [GitHub Design System](https://primer.style/)
+- [Color Palette Reference](https://github.com/primer/primitives)
+- [Typography Guidelines](https://primer.style/design/foundations/typography)
+
+### 🚀 Performance Resources
+- [Web Vitals](https://web.dev/vitals/)
+- [Mobile Performance Best Practices](https://web.dev/mobile/)
+- [React Performance Optimization](https://react.dev/learn/render-and-commit)
 
 ---
 
 ## 📞 Support & Contact
 
-### Getting Help
-
+### 🆘 Getting Help
+- **GitHub Issues**: For bugs and feature requests
+- **Email Support**: [hello@someshbhardwaj.me](mailto:hello@someshbhardwaj.me)
 - **Documentation**: This comprehensive guide
-- **Issues**: GitHub Issues for bug reports
-- **Discussions**: GitHub Discussions for questions
+- **Community**: GitHub Discussions (if enabled)
 
-### Contact Information
-
-- **Developer**: Somesh Bhardwaj
-- **Email**: hello@someshbhardwaj.me
+### 👨‍💻 About the Developer
+**Somesh Bhardwaj** - Full Stack Developer & AI Enthusiast
 - **Portfolio**: [someshbhardwaj.me](https://someshbhardwaj.me)
+- **GitHub**: [@Dev-Somesh](https://github.com/Dev-Somesh)
 - **LinkedIn**: [ersomeshbhardwaj](https://www.linkedin.com/in/ersomeshbhardwaj/)
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
----
-
-## 🙏 Acknowledgments
-
-DevWrapped 2025 is made possible by the incredible technologies and services provided by:
-
-### AI & Intelligence
-- **[Google Gemini AI](https://ai.google.dev/)** - Powering intelligent insights and narrative generation with advanced language models
-
-### Data & APIs  
-- **[GitHub API](https://docs.github.com/en/rest)** - Comprehensive developer data and repository insights that form the foundation of our analysis
-
-### Infrastructure & Deployment
-- **[Netlify](https://netlify.com)** - Serverless functions and seamless deployment platform enabling scalable, secure hosting
-
-### Frontend Technologies
-- **[React](https://react.dev)** - Modern UI framework for creating interactive and responsive user experiences
-- **[Tailwind CSS](https://tailwindcss.com)** - Utility-first CSS framework enabling rapid, consistent styling
-- **[Vite](https://vitejs.dev)** - Lightning-fast build tool and development server for optimal development experience
-
-### Development Tools
-- **[TypeScript](https://typescriptlang.org)** - Type-safe JavaScript ensuring robust, maintainable code
-- **[html-to-image](https://github.com/bubkoo/html-to-image)** - High-quality image export functionality for sharing capabilities
-
-### Special Recognition
-We extend our gratitude to the open-source community and the organizations that provide generous APIs and tools, making projects like DevWrapped possible. Each technology contributes to creating a seamless, intelligent, and beautiful experience for developers worldwide.
+<div align="center">
+  <h3>🎉 Thank you for using DevWrapped 2025!</h3>
+  <p><em>Transform your code journey into a cinematic experience</em></p>
+  
+  **[⭐ Star this project](https://github.com/Dev-Somesh/Dev-Wrapped)** if you found it helpful!
+</div>
 
 ---
 
 <p align="center">
-  <b>Built with ❤️ by <a href="https://someshbhardwaj.me">Somesh Bhardwaj</a></b><br />
-  <span style="opacity: 0.3; font-family: monospace; font-size: 10px; letter-spacing: 5px;">*** END_OF_DOCUMENTATION_2025 ***</span>
+  <sub>Last updated: December 2025 | Version 2025.1.0</sub><br>
+  <sub>📱 Mobile Optimized | 🤖 AI Powered | 🔒 Privacy First</sub>
 </p>
