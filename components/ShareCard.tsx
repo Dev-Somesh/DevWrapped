@@ -4,8 +4,6 @@ import { toPng } from 'html-to-image';
 import { GitHubStats, AIInsights } from '../types';
 import { generateSecureTraceId } from '../services/security';
 
-type AspectRatio = '1:1' | '4:5' | '9:16';
-
 interface ShareCardProps {
   stats: GitHubStats;
   insights: AIInsights;
@@ -39,7 +37,6 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
-  const [aspectRatio, setAspectRatio] = useState<AspectRatio>('4:5');
   const [scale, setScale] = useState(1);
   const [activeHook, setActiveHook] = useState(0);
   const [traceId, setTraceId] = useState('FETCHING...');
@@ -108,12 +105,12 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const containerPadding = 32; // Account for padding
-      const availableWidth = Math.min(viewportWidth - containerPadding, 480);
+      const availableWidth = Math.min(viewportWidth - containerPadding, 600);
       const availableHeight = viewportHeight * 0.8; // Use 80% of viewport height
       
-      // Get the natural card dimensions
-      const cardWidth = parseInt(ratioStyles[aspectRatio].width);
-      const cardHeight = parseInt(ratioStyles[aspectRatio].height);
+      // Fixed responsive card dimensions - increased size
+      const cardWidth = 480;
+      const cardHeight = 600;
       
       // Calculate scale based on both width and height constraints
       const widthScale = availableWidth / cardWidth;
@@ -129,7 +126,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
       window.removeEventListener('resize', handleResize);
       clearTimeout(timer);
     };
-  }, [aspectRatio]);
+  }, []);
 
   const downloadImage = async () => {
     if (!cardRef.current) return;
@@ -139,8 +136,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
     if (typeof window !== 'undefined' && (window as any).clarity) {
       (window as any).clarity('event', 'share_card_export_started', {
         username: stats.username,
-        archetype: insights.archetype,
-        aspect_ratio: aspectRatio
+        archetype: insights.archetype
       });
     }
     
@@ -168,8 +164,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
       if (typeof window !== 'undefined' && (window as any).clarity) {
         (window as any).clarity('event', 'share_card_export_success', {
           username: stats.username,
-          archetype: insights.archetype,
-          aspect_ratio: aspectRatio
+          archetype: insights.archetype
         });
       }
     } catch (err) {
@@ -233,66 +228,37 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
     return '#161b22'; // Dark background (20% chance)
   });
 
-  const ratioStyles = {
-    '1:1': { width: '360px', height: '360px' },
-    '4:5': { width: '360px', height: '450px' },
-    '9:16': { width: '320px', height: '568px' },
-  };
-
   return (
     <div className="w-full flex flex-col items-center animate-in fade-in duration-1000">
-      <div className="w-full max-w-7xl px-2 md:px-4 flex justify-between items-end mb-4 md:mb-6">
+      <div className="w-full max-w-8xl px-2 md:px-4 flex justify-between items-end mb-4 md:mb-6">
         <div className="flex flex-col gap-1">
           <span className="text-[9px] md:text-[10px] font-mono font-black text-[#39d353] tracking-[0.3em] md:tracking-[0.4em] uppercase">Status: Artifact_Finalized</span>
           <h2 className="text-[9px] md:text-[10px] font-mono font-bold text-white/20 tracking-[0.4em] md:tracking-[0.5em] uppercase">SECURE_TRACE_ID: {traceId}</h2>
         </div>
       </div>
       
-      <div className="flex flex-col xl:flex-row gap-6 md:gap-8 items-start justify-center w-full max-w-7xl px-2 md:px-4">
+      <div className="flex flex-col xl:flex-row gap-8 md:gap-12 items-start justify-center w-full max-w-8xl px-2 md:px-4">
         
         {/* CARD VIEWER */}
         <div 
           ref={containerRef}
           className="flex flex-col items-center gap-4 md:gap-6 w-full xl:w-auto flex-shrink-0"
         >
-          {/* Ratio Selector */}
-          <div className="flex bg-[#161b22]/90 backdrop-blur-2xl p-1 md:p-1.5 rounded-full border border-[#30363d] shadow-2xl z-20">
-               {(['1:1', '4:5', '9:16'] as AspectRatio[]).map((r) => (
-              <button
-                key={r}
-                onClick={() => {
-                  setAspectRatio(r);
-                  // Track aspect ratio change
-                  if (typeof window !== 'undefined' && (window as any).clarity) {
-                    (window as any).clarity('event', 'aspect_ratio_changed', {
-                      username: stats.username,
-                      new_ratio: r,
-                      previous_ratio: aspectRatio
-                    });
-                  }
-                }}
-                className={`px-2 md:px-4 py-1.5 md:py-2 rounded-full text-[9px] md:text-[10px] font-mono uppercase tracking-widest transition-all ${aspectRatio === r ? 'bg-[#39d353] text-black font-black' : 'text-[#8b949e] hover:text-white'}`}
-              >
-                {r}
-              </button>
-            ))}
-          </div>
-
           <div 
-            className="relative flex items-center justify-center transition-all duration-700 ease-in-out w-full max-w-sm md:max-w-none"
+            className="relative flex items-center justify-center transition-all duration-700 ease-in-out w-full max-w-lg md:max-w-none"
             style={{ 
-              height: `${parseInt(ratioStyles[aspectRatio].height) * scale}px`,
-              width: `${parseInt(ratioStyles[aspectRatio].width) * scale}px`,
+              height: `${600 * scale}px`,
+              width: `${480 * scale}px`,
               maxWidth: '100vw',
               transformOrigin: 'top center'
             }}
           >
             <div 
               ref={cardRef}
-              className={`absolute inset-0 bg-[#0d1117] rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-6 lg:p-8 overflow-hidden border border-[#30363d] shadow-[0_40px_80px_-20px_rgba(0,0,0,1)] flex flex-col`}
+              className={`absolute inset-0 bg-[#0d1117] rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 lg:p-10 overflow-hidden border border-[#30363d] shadow-[0_40px_80px_-20px_rgba(0,0,0,1)] flex flex-col`}
               style={{ 
-                width: ratioStyles[aspectRatio].width,
-                height: ratioStyles[aspectRatio].height
+                width: '480px',
+                height: '600px'
               }}
             >
               {/* Background GitHub Logos */}
@@ -349,51 +315,51 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               </div>
 
               {/* Archetype Hero */}
-              <div className={`flex flex-col relative z-20 flex-shrink-0 ${aspectRatio === '1:1' ? 'mb-3' : 'mb-4'}`}>
+              <div className={`flex flex-col relative z-20 flex-shrink-0 mb-4`}>
                  <div className="w-8 h-[2px] bg-[#39d353] mb-3 rounded-full shadow-[0_0_15px_rgba(57,211,83,0.4)]"></div>
-                 <h3 className={`${aspectRatio === '1:1' ? 'text-xl' : 'text-2xl md:text-3xl'} font-display font-black text-white leading-tight tracking-tighter mb-3 uppercase`}>
+                 <h3 className={`text-3xl md:text-4xl font-display font-black text-white leading-tight tracking-tighter mb-4 uppercase`}>
                    {insights.archetype}
                  </h3>
-                 <p className={`${aspectRatio === '1:1' ? 'text-[10px]' : 'text-[11px] md:text-[12px]'} text-[#8b949e] font-light leading-relaxed tracking-wide opacity-90 italic`}>
+                 <p className={`text-[13px] md:text-[14px] text-[#8b949e] font-light leading-relaxed tracking-wide opacity-90 italic`}>
                    {insights.archetypeDescription}
                  </p>
               </div>
 
               {/* Stats Grid */}
-              <div className={`grid grid-cols-2 gap-x-4 gap-y-2 relative z-20 ${aspectRatio === '1:1' ? 'mb-3' : 'mb-4'}`}>
+              <div className={`grid grid-cols-2 gap-x-6 gap-y-3 relative z-20 mb-5`}>
                 {candidateStats.slice(0, 4).map((stat) => (
-                  <div key={stat.id} className="border-t border-white/10 pt-1.5 md:pt-2 group">
-                    <div className="flex items-center gap-1 mb-0.5">
+                  <div key={stat.id} className="border-t border-white/10 pt-2 md:pt-3 group">
+                    <div className="flex items-center gap-1.5 mb-1">
                       <span className="opacity-40 group-hover:opacity-100 transition-opacity">
                         {stat.icon}
                       </span>
-                      <p className="text-[7px] md:text-[8px] text-[#484f58] font-mono uppercase tracking-[0.2em] group-hover:text-[#8b949e] transition-colors">{stat.label}</p>
+                      <p className="text-[8px] md:text-[9px] text-[#484f58] font-mono uppercase tracking-[0.2em] group-hover:text-[#8b949e] transition-colors">{stat.label}</p>
                     </div>
-                    <p className={`${aspectRatio === '1:1' ? 'text-lg' : 'text-xl md:text-2xl'} text-white font-black tracking-tighter truncate`}>{stat.value}</p>
+                    <p className={`text-2xl md:text-3xl text-white font-black tracking-tighter truncate`}>{stat.value}</p>
                   </div>
                 ))}
               </div>
 
               {/* Additional Stats Row */}
               {candidateStats.length > 4 && (
-                <div className={`grid grid-cols-1 gap-y-2 relative z-20 ${aspectRatio === '1:1' ? 'mb-3' : 'mb-4'}`}>
+                <div className={`grid grid-cols-1 gap-y-3 relative z-20 mb-5`}>
                   {candidateStats.slice(4).map((stat) => (
-                    <div key={stat.id} className="border-t border-white/10 pt-1.5 md:pt-2 group text-center">
-                      <div className="flex items-center justify-center gap-1 mb-0.5">
+                    <div key={stat.id} className="border-t border-white/10 pt-2 md:pt-3 group text-center">
+                      <div className="flex items-center justify-center gap-1.5 mb-1">
                         <span className="opacity-40 group-hover:opacity-100 transition-opacity">
                           {stat.icon}
                         </span>
-                        <p className="text-[7px] md:text-[8px] text-[#484f58] font-mono uppercase tracking-[0.2em] group-hover:text-[#8b949e] transition-colors">{stat.label}</p>
+                        <p className="text-[8px] md:text-[9px] text-[#484f58] font-mono uppercase tracking-[0.2em] group-hover:text-[#8b949e] transition-colors">{stat.label}</p>
                       </div>
-                      <p className={`${aspectRatio === '1:1' ? 'text-lg' : 'text-xl md:text-2xl'} text-white font-black tracking-tighter truncate`}>{stat.value}</p>
+                      <p className={`text-2xl md:text-3xl text-white font-black tracking-tighter truncate`}>{stat.value}</p>
                     </div>
                   ))}
                 </div>
               )}
 
               {/* Insight Phrase */}
-              <div className={`relative z-20 ${aspectRatio === '1:1' ? 'mb-3' : 'mb-5'}`}>
-                <p className={`${aspectRatio === '1:1' ? 'text-[11px]' : 'text-[12px] md:text-[13px]'} text-white/80 leading-relaxed border-l-[2px] border-[#39d353] pl-3 py-0 italic`}>
+              <div className={`relative z-20 mb-6`}>
+                <p className={`text-[14px] md:text-[15px] text-white/80 leading-relaxed border-l-[2px] border-[#39d353] pl-4 py-0 italic`}>
                   "{insights.cardInsight}"
                 </p>
               </div>
@@ -415,8 +381,8 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
         </div>
 
         {/* SIDEBAR ACTIONS & SHARE SYSTEM */}
-        <div className="flex flex-col gap-4 md:gap-6 w-full max-w-sm flex-shrink-0 xl:mt-12">
-           <div className="flex flex-col h-full p-4 md:p-6 lg:p-8 rounded-[1.5rem] md:rounded-[2rem] bg-[#161b22]/40 border border-[#30363d] backdrop-blur-3xl shadow-xl">
+        <div className="flex flex-col gap-4 md:gap-6 w-full max-w-lg flex-shrink-0">
+           <div className="flex flex-col h-full p-6 md:p-8 lg:p-10 rounded-[1.5rem] md:rounded-[2rem] bg-[#161b22]/40 border border-[#30363d] backdrop-blur-3xl shadow-xl">
              
              {/* Share Hook Selection */}
              <div className="mb-8 space-y-4">
