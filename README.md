@@ -144,6 +144,25 @@ For comprehensive documentation including architecture, deployment, API referenc
 - **Direct Support**: [hello@someshbhardwaj.me](mailto:hello@someshbhardwaj.me)
 - **Portfolio**: [someshbhardwaj.me](https://someshbhardwaj.me)
 
+## 💖 Support This Project
+
+DevWrapped 2025 is free and open source. If you find it valuable, consider supporting its development:
+
+<div align="center">
+  
+[![Sponsor on GitHub](https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=for-the-badge&logo=github-sponsors)](https://github.com/sponsors/Dev-Somesh)
+
+</div>
+
+### 🎯 How Your Support Helps
+- 🤖 **AI Innovation**: Enhanced Gemini AI features and insights
+- 🚀 **Infrastructure**: Reliable hosting and performance optimization  
+- 📱 **Mobile Excellence**: Continued mobile-first development
+- 🔒 **Privacy & Security**: Maintaining our zero-data-retention promise
+- 🆕 **New Features**: Export formats, visualizations, and analysis types
+
+**All development is transparent and community-driven. [Learn more about sponsoring →](https://github.com/sponsors/Dev-Somesh)**
+
 ## 🙏 Credits & Acknowledgments
 
 DevWrapped 2025 is powered by incredible technologies and services:

@@ -1,0 +1,29 @@
+# GitHub Sponsors configuration for DevWrapped 2025
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+# GitHub Sponsors username
+github: Dev-Somesh
+
+# Open Collective (if you decide to add it later)
+# open_collective: devwrapped
+
+# Custom sponsorship URLs (if you have other platforms)
+# custom: ['https://someshbhardwaj.me/sponsor', 'https://buymeacoffee.com/somesh']
+
+# Patreon (if you decide to use it)
+# patreon: someshbhardwaj
+
+# Ko-fi (alternative platform)
+# ko_fi: someshbhardwaj
+
+# Tidelift (for enterprise support)
+# tidelift: npm/devwrapped
+
+# Community Bridge (Linux Foundation)
+# community_bridge: devwrapped
+
+# Liberapay (European alternative)
+# liberapay: someshbhardwaj
+
+# IssueHunt (bounty platform)
+# issuehunt: Dev-Somesh
