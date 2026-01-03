@@ -124,9 +124,9 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
       const availableWidth = Math.min(viewportWidth - containerPadding, 600);
       const availableHeight = viewportHeight * 0.8; // Use 80% of viewport height
       
-      // Fixed responsive card dimensions - increased size
+      // Fixed responsive card dimensions - increased size for new content
       const cardWidth = 480;
-      const cardHeight = 600;
+      const cardHeight = 720; // Increased from 600 to 720 for "Why This Archetype" section
       
       // Calculate scale based on both width and height constraints
       const widthScale = availableWidth / cardWidth;
@@ -285,7 +285,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
           <div 
             className="relative flex items-center justify-center transition-all duration-700 ease-in-out w-full max-w-lg md:max-w-none"
             style={{ 
-              height: `${600 * scale}px`,
+              height: `${720 * scale}px`,
               width: `${480 * scale}px`,
               maxWidth: '100vw',
               transformOrigin: 'top center'
@@ -296,7 +296,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               className={`absolute inset-0 bg-[#0d1117] rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 lg:p-10 overflow-hidden border border-[#30363d] shadow-[0_40px_80px_-20px_rgba(0,0,0,1)] flex flex-col`}
               style={{ 
                 width: '480px',
-                height: '600px'
+                height: '720px'
               }}
             >
               {/* Background GitHub Logos */}
@@ -353,9 +353,9 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               </div>
 
               {/* Archetype Hero */}
-              <div className={`flex flex-col relative z-20 flex-shrink-0 mb-4`}>
-                 <div className="w-8 h-[2px] bg-[#39d353] mb-3 rounded-full shadow-[0_0_15px_rgba(57,211,83,0.4)]"></div>
-                 <h3 className={`text-3xl md:text-4xl font-display font-black text-white leading-tight tracking-tighter mb-4 uppercase`}>
+              <div className={`flex flex-col relative z-20 flex-shrink-0 mb-3`}>
+                 <div className="w-8 h-[2px] bg-[#39d353] mb-2 rounded-full shadow-[0_0_15px_rgba(57,211,83,0.4)]"></div>
+                 <h3 className={`text-3xl md:text-4xl font-display font-black text-white leading-tight tracking-tighter mb-3 uppercase`}>
                    {insights.archetype}
                  </h3>
                  <p className={`text-[13px] md:text-[14px] text-[#8b949e] font-light leading-relaxed tracking-wide opacity-90 italic`}>
@@ -363,9 +363,9 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
                  </p>
                  
                  {/* Why This Archetype */}
-                 <div className="mt-4 pt-3 border-t border-white/10">
-                   <h4 className="text-[9px] font-mono text-[#39d353] uppercase tracking-[0.3em] font-black mb-2">Why This Archetype</h4>
-                   <div className="space-y-1">
+                 <div className="mt-3 pt-2 border-t border-white/10">
+                   <h4 className="text-[9px] font-mono text-[#39d353] uppercase tracking-[0.3em] font-black mb-1.5">Why This Archetype</h4>
+                   <div className="space-y-0.5">
                      <div className="flex items-start gap-2">
                        <span className="text-[#39d353] text-[10px] mt-0.5">•</span>
                        <span className="text-[10px] text-[#c9d1d9] font-light">{stats.reposContributed} repositories → Cross-domain architectural breadth</span>
@@ -387,7 +387,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               </div>
 
               {/* Stats Grid */}
-              <div className={`grid grid-cols-2 gap-x-6 gap-y-3 relative z-20 mb-5`}>
+              <div className={`grid grid-cols-2 gap-x-6 gap-y-2 relative z-20 mb-4`}>
                 {candidateStats.slice(0, 4).map((stat) => (
                   <div key={stat.id} className="border-t border-white/10 pt-2 md:pt-3 group">
                     <div className="flex items-center gap-1.5 mb-1">
@@ -403,7 +403,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
 
               {/* Additional Stats Row */}
               {candidateStats.length > 4 && (
-                <div className={`grid grid-cols-1 gap-y-3 relative z-20 mb-5`}>
+                <div className={`grid grid-cols-1 gap-y-2 relative z-20 mb-4`}>
                   {candidateStats.slice(4).map((stat) => (
                     <div key={stat.id} className="border-t border-white/10 pt-2 md:pt-3 group text-center">
                       <div className="flex items-center justify-center gap-1.5 mb-1">
@@ -419,7 +419,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               )}
 
               {/* Insight Phrase */}
-              <div className={`relative z-20 mb-6`}>
+              <div className={`relative z-20 mb-4`}>
                 <p className={`text-[14px] md:text-[15px] text-white/80 leading-relaxed border-l-[2px] border-[#39d353] pl-4 py-0 italic`}>
                   "{insights.cardInsight}"
                 </p>
