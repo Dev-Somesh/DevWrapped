@@ -293,81 +293,205 @@ const generateMonthlyActivity = (monthlyContributions: Map<string, number>) => {
 
 ## 🤖 Gemini AI Integration
 
+### 🧠 AI Engine Optimization (AEO)
+
+DevWrapped 2025 features advanced **AI Engine Optimization (AEO)** for superior AI-generated insights and narratives.
+
+#### **AEO Features**
+- **Dynamic Year-Aware Prompting**: AI prompts adapt based on selected analysis year
+- **Enhanced Data Context**: 20+ comprehensive data points for better analysis
+- **Advanced Model Configuration**: Optimized parameters for quality and performance
+- **10 Distinct Archetypes**: Data-driven developer persona classification
+- **Performance Monitoring**: Real-time processing metrics and quality validation
+
 ### 🎯 AI Models
 
 #### **Primary Model: gemini-3-flash-preview**
 - **Use Case**: Full feature set with advanced insights
 - **Capabilities**: Complex reasoning, detailed analysis
 - **Rate Limits**: Higher quota requirements
+- **AEO Configuration**:
+  ```typescript
+  config: {
+    temperature: 0.7,        // Balanced creativity vs consistency
+    topK: 40,               // Focused vocabulary selection
+    topP: 0.9,              // High-quality token sampling
+    maxOutputTokens: 4096,  // Sufficient for detailed analysis
+    candidateCount: 1       // Single high-quality response
+  }
+  ```
 
 #### **Fallback Model: gemini-3-flash-lite**
 - **Use Case**: Economy mode with basic insights
 - **Capabilities**: Simplified analysis, faster responses
 - **Rate Limits**: Lower quota requirements
 
-### 📝 Prompt Engineering
+### 📝 Advanced Prompt Engineering (AEO)
 
-#### **System Prompt Structure**
+#### **Dynamic Year-Aware Prompt Structure**
 ```typescript
 const generatePrompt = (stats: GitHubStats) => {
-  return `You are an expert developer analyst creating a personalized year-in-review for a GitHub user.
+  // AEO: Dynamic year-aware prompt generation
+  const currentYear = new Date().getFullYear();
+  const analysisYear = stats.analysisYear || currentYear;
+  const isCurrentYear = analysisYear === currentYear;
+  const yearContext = isCurrentYear ? 
+    `current ${analysisYear} activity (partial year data)` : 
+    `complete ${analysisYear} development year`;
 
-CONTEXT:
+  return `You are an expert developer analyst creating a comprehensive "${analysisYear} Year Wrapped" report.
+
+ANALYSIS CONTEXT:
+- Target Year: ${analysisYear} (${yearContext})
+- Data Quality: ${isCurrentYear ? 'Partial year + GitHub API 90-day limitation' : 'Historical data with API limitations'}
+- Analysis Date: ${new Date().toISOString().split('T')[0]}
+
+DEVELOPER TELEMETRY:
 - Username: ${stats.username}
-- Total Contributions: ${stats.totalCommits}
-- Active Days: ${stats.activeDays}
-- Top Languages: ${stats.topLanguages.map(l => l.name).join(', ')}
-- Recent Activity: ${stats.recentRepos.length} repositories
+- Total Contributions: ${stats.totalCommits} (commits, PRs, issues, reviews)
+- Active Development Days: ${stats.activeDays} days
+- Technology Stack: ${stats.topLanguages.map(l => `${l.name} (${l.count} repos)`).join(', ')}
+- Repository Scope: ${stats.reposContributed} total repositories
+- Current Streak: ${stats.streak} consecutive days
+- Longest Streak: ${stats.longestStreak} days
+- Peak Activity Month: ${stats.mostActiveMonth}
+- Activity Pattern: ${stats.activityPattern}
+- Account Maturity: ${stats.accountAge} years on GitHub
+- Community Engagement: ${stats.followers} followers, ${stats.following} following
+- Stars Received: ${stats.totalStarsReceived} across all repositories
+- New Repositories: ${stats.reposCreatedThisYear} created in ${analysisYear}
+- Profile Context: ${stats.bio ? `"${stats.bio}"` : 'No bio'} | ${stats.company || 'No company'} | ${stats.location || 'No location'}
 
-TASK:
-Generate a comprehensive analysis in JSON format with the following structure:
+ADVANCED BEHAVIORAL ANALYSIS:
+- Contribution Distribution: ${stats.contributionGrid ? stats.contributionGrid.map(m => `${m.month}: ${m.count} (level ${m.level})`).join(', ') : 'Not available'}
+- Recent Projects: ${stats.recentRepos.map(r => `${r.name} (${r.language}, ${r.stars} stars)`).join(', ')}
 
+ARCHETYPE SELECTION LOGIC (Choose most fitting):
+- "The Architect": High repo breadth (15+) + consistent patterns + complex languages
+- "The Explorer": 4+ languages + diverse projects + experimental activity
+- "The Craftsperson": Deep focus + quality over quantity + refined tech stack
+- "The Collaborator": High social metrics + team repos + consistent contributions
+- "The Innovator": New repos created + cutting-edge stack + burst activity patterns
+- "The Maintainer": Long streaks (30+) + steady patterns + established projects
+- "The Specialist": Deep expertise in 1-2 languages + focused domain
+- "The Builder": High commit volume + multiple active projects + creation-focused
+- "The Contributor": Open source focus + community engagement + diverse contributions
+- "The Learner": Rapid skill acquisition + educational repos + growth trajectory
+
+OUTPUT REQUIREMENTS (STRICT JSON FORMAT):
 {
-  "archetype": "Developer archetype (e.g., 'The Night Owl', 'The Consistent Contributor')",
-  "archetypeDescription": "Brief 1-2 sentence description of the archetype",
-  "narrative": "Engaging 2-3 paragraph story about their 2025 development journey",
-  "cardInsight": "One compelling insight for social sharing (max 100 characters)",
-  "insights": ["3-4 key observations about their development patterns"],
-  "patterns": ["3-4 behavioral patterns identified from their activity"]
+  "archetype": "A compelling developer persona title",
+  "archetypeDescription": "One poetic sentence defining their essence",
+  "archetypeExplanation": {
+    "reasoning": ["3 data-driven reasons for this archetype"],
+    "keyFactors": [
+      {"factor": "Specific behavioral trait", "evidence": "Concrete data point"},
+      {"factor": "Development pattern", "evidence": "Supporting metric"},
+      {"factor": "Technical characteristic", "evidence": "Quantified evidence"}
+    ],
+    "confidence": 0.85
+  },
+  "executiveSummary": "Two-sentence TL;DR of their ${analysisYear} development journey",
+  "insights": [
+    "Specific behavioral insight from their coding patterns",
+    "Technical growth observation with data backing",
+    "Collaboration or productivity insight"
+  ],
+  "patterns": [
+    "High-level development rhythm or habit",
+    "Technical or temporal pattern in their work"
+  ],
+  "narrative": "Three compelling paragraphs telling their ${analysisYear} story. Use \\n\\n between paragraphs. Make it personal, data-driven, and inspiring. Reference specific metrics and achievements.",
+  "cardInsight": "Punchy 8-12 word quote perfect for social media sharing",
+  "forwardLooking": {
+    "recommendations": [
+      "Actionable suggestion based on their patterns",
+      "Growth opportunity aligned with their strengths",
+      "Technical or career advancement recommendation"
+    ],
+    "risks": [
+      "Potential burnout or stagnation risk to monitor",
+      "Skill gap or development challenge to address"
+    ],
+    "opportunities": [
+      "Emerging technology or domain to explore",
+      "Community or collaboration opportunity"
+    ]
+  }
 }
 
-GUIDELINES:
-- Be professional yet engaging
-- Use actual data from their GitHub activity
-- Focus on 2025 achievements and patterns
-- Avoid generic statements
-- Make it personal and meaningful`;
+QUALITY STANDARDS:
+- Use specific numbers and metrics in explanations
+- Make archetype feel earned and trustworthy
+- Ensure narrative flows naturally and tells a compelling story
+- Base all insights on actual data patterns
+- Keep recommendations actionable and personalized
+- Reference ${analysisYear} context throughout
+
+TONE: Professional yet engaging, data-driven but human, celebratory of achievements while providing constructive guidance.`;
 };
 ```
 
-#### **Response Processing**
+#### **AEO Response Processing with Quality Validation**
 ```typescript
-const processAIResponse = (response: string): AIInsights => {
+const processAIResponse = (response: string, processingTime: number): AIInsights => {
   try {
     const parsed = JSON.parse(response);
     
-    // Validate required fields
-    const required = ['archetype', 'archetypeDescription', 'narrative', 
-                     'cardInsight', 'insights', 'patterns'];
+    // AEO: Enhanced validation for quality assurance
+    const required = ['archetype', 'archetypeDescription', 'archetypeExplanation', 
+                     'narrative', 'cardInsight', 'insights', 'patterns', 
+                     'forwardLooking', 'executiveSummary'];
     
     for (const field of required) {
       if (!parsed[field]) {
+        console.warn(`AEO: Missing required field: ${field}`);
         throw new Error(`Missing required field: ${field}`);
       }
     }
     
+    // AEO: Quality validation
+    if (!parsed.archetypeExplanation?.confidence || 
+        parsed.archetypeExplanation.confidence < 0.7) {
+      console.warn('AEO: Low archetype confidence score');
+    }
+    
+    if (parsed.narrative.length < 200) {
+      console.warn('AEO: Narrative too short, may lack depth');
+    }
+    
+    // AEO: Performance logging
+    console.log('AEO: Response quality validation passed', {
+      processingTime,
+      narrativeLength: parsed.narrative.length,
+      confidence: parsed.archetypeExplanation?.confidence,
+      archetype: parsed.archetype
+    });
+    
     return parsed as AIInsights;
   } catch (error) {
+    console.error('AEO: Response parsing failed, using fallback', error);
     // Fallback to default insights
     return generateFallbackInsights();
   }
 };
 ```
 
-### 🔄 API Request Flow
+### 🔄 AEO-Enhanced API Request Flow
 
 ```typescript
 const generateAIWrapped = async (stats: GitHubStats, model: string): Promise<AIInsights> => {
+  // AEO: Performance monitoring
+  const startTime = Date.now();
+  
+  console.log('AEO: Starting AI analysis', {
+    username: stats.username,
+    model: model,
+    totalCommits: stats.totalCommits,
+    activeDays: stats.activeDays,
+    analysisYear: stats.analysisYear || new Date().getFullYear()
+  });
+  
   const prompt = generatePrompt(stats);
   
   const response = await fetch('/.netlify/functions/gemini-proxy', {
@@ -376,19 +500,35 @@ const generateAIWrapped = async (stats: GitHubStats, model: string): Promise<AII
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      prompt,
-      model,
-      maxTokens: 2000,
-      temperature: 0.7
+      stats,
+      modelName: model
     }),
   });
   
   if (!response.ok) {
+    const processingTime = Date.now() - startTime;
+    console.error('AEO: AI generation failed', {
+      status: response.status,
+      processingTime,
+      model
+    });
     throw new Error(`AI generation failed: ${response.status}`);
   }
   
   const result = await response.json();
-  return processAIResponse(result.content);
+  const processingTime = Date.now() - startTime;
+  
+  // AEO: Enhanced response processing with quality validation
+  const insights = processAIResponse(result, processingTime);
+  
+  console.log('AEO: AI analysis completed successfully', {
+    username: stats.username,
+    processingTime,
+    archetype: insights.archetype,
+    model
+  });
+  
+  return insights;
 };
 ```
 

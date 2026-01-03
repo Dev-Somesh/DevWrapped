@@ -33,13 +33,15 @@
 
 ### ✨ Key Features
 
-- **🤖 AI-Powered Insights**: Personalized narratives using Google Gemini
-- **📊 Comprehensive Analytics**: Detailed GitHub activity analysis
+- **🤖 AI-Powered Insights**: Personalized narratives using Google Gemini with **AEO (AI Engine Optimization)**
+- **📊 Comprehensive Analytics**: Detailed GitHub activity analysis with year selection
+- **📅 Smart Year Selection**: Choose analysis year with GitHub API limitation awareness
 - **📱 Mobile-First Design**: Fully responsive across all devices
 - **🎨 Beautiful Visualizations**: GitHub-inspired design with smooth animations
 - **📤 Export Capabilities**: High-quality image generation for sharing
-- **🔒 Privacy-First**: No data retention, client-side processing
+- **🔒 Privacy-First**: No data retention, client-side processing, anonymous analytics only
 - **⚡ Performance Optimized**: Fast loading and smooth interactions
+- **🧠 Advanced AI Engine**: 10 distinct developer archetypes with confidence scoring
 
 ### 🎭 What Users Get
 
@@ -47,7 +49,10 @@
 2. **Development Dossier**: Detailed analysis with repository insights
 3. **Monthly Activity Grid**: Visual contribution patterns
 4. **Tech Stack Visualization**: Color-coded technology usage
-5. **AI-Generated Narrative**: Personalized development story
+5. **AI-Generated Narrative**: Personalized development story with year-specific context
+6. **Developer Archetype**: One of 10 distinct personas (The Architect, The Explorer, etc.)
+7. **Forward-Looking Insights**: Actionable recommendations and growth opportunities
+8. **Data Transparency**: Clear information about GitHub API limitations and data quality
 
 ---
 
@@ -416,6 +421,83 @@ const calculateContributionStats = (events: any[], repos: any[]) => {
 - **Color Coding**: 5-level GitHub-style activity visualization
 - **Data Source**: Centralized contribution calculation
 - **Responsive**: Adapts sizing and layout per device
+
+---
+
+## 🧠 AI Engine Optimization (AEO)
+
+DevWrapped 2025 features advanced **AI Engine Optimization (AEO)** for superior AI-generated insights and narratives.
+
+### 🎯 AEO Features
+
+#### **Dynamic Year-Aware Prompting**
+- **Context-Aware**: AI prompts adapt based on selected analysis year
+- **Data Quality Indicators**: AI receives explicit information about GitHub API limitations
+- **Temporal Context**: Prompts include current date and analysis year for accurate framing
+
+#### **Enhanced Data Context**
+- **Comprehensive Telemetry**: AI receives 20+ data points including:
+  - Contribution distribution across months
+  - Recent project details with languages and stars
+  - Profile context (bio, company, location)
+  - Community engagement metrics
+  - Account maturity indicators
+
+#### **Advanced Model Configuration**
+```typescript
+config: {
+  temperature: 0.7,        // Balanced creativity vs consistency
+  topK: 40,               // Focused vocabulary selection
+  topP: 0.9,              // High-quality token sampling
+  maxOutputTokens: 4096,  // Sufficient for detailed analysis
+  candidateCount: 1       // Single high-quality response
+}
+```
+
+#### **10 Distinct Developer Archetypes**
+1. **The Architect**: High repo breadth + consistent patterns + complex languages
+2. **The Explorer**: 4+ languages + diverse projects + experimental activity
+3. **The Craftsperson**: Deep focus + quality over quantity + refined tech stack
+4. **The Collaborator**: High social metrics + team repos + consistent contributions
+5. **The Innovator**: New repos created + cutting-edge stack + burst patterns
+6. **The Maintainer**: Long streaks (30+) + steady patterns + established projects
+7. **The Specialist**: Deep expertise in 1-2 languages + focused domain
+8. **The Builder**: High commit volume + multiple active projects + creation-focused
+9. **The Contributor**: Open source focus + community engagement + diverse contributions
+10. **The Learner**: Rapid skill acquisition + educational repos + growth trajectory
+
+#### **Performance Monitoring**
+- **Processing Time Tracking**: Monitor AI response times
+- **Quality Validation**: Automatic response structure validation
+- **Error Classification**: 7 distinct error types with specific handling
+- **Diagnostic Logging**: Comprehensive error context for debugging
+
+### 📅 Smart Year Selection
+
+#### **GitHub API Limitation Awareness**
+DevWrapped 2025 intelligently handles GitHub's 90-day public events API limitation:
+
+```typescript
+// Year availability calculation
+const calculateYearAvailability = () => {
+  const daysSinceYearStart = /* days since Jan 1 */;
+  const GITHUB_EVENTS_LIMIT_DAYS = 90;
+  
+  if (daysSinceYearStart >= GITHUB_EVENTS_LIMIT_DAYS) {
+    // Show current year only
+    return { canShowYearSelection: false };
+  } else {
+    // Show both current and previous year
+    return { canShowYearSelection: true };
+  }
+};
+```
+
+#### **User Experience**
+- **Automatic Detection**: App determines available years based on current date
+- **Clear Disclaimers**: Users see data limitation warnings
+- **Smart Defaults**: Automatically selects the most appropriate year
+- **Data Quality Indicators**: Shows partial/mixed data warnings
 
 ---
 

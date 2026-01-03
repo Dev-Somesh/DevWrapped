@@ -120,13 +120,15 @@ const App: React.FC = () => {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [pageStartTime, step, stats?.username, stats?.totalCommits, insights?.archetype]);
 
-  const startAnalysis = async (user: string) => {
+  const startAnalysis = async (user: string, selectedYear?: number) => {
+    const analysisYear = selectedYear || new Date().getFullYear();
     setStep(Step.Analysis);
     setError(null);
     
     // Track Launch AI event
     trackEvent('Launch AI', {
       user_id: user,
+      selected_year: analysisYear,
       page_url: window.location.href,
       page_title: document.title
     });
@@ -135,7 +137,8 @@ const App: React.FC = () => {
     identifyUser(user, {
       '$name': user,
       'platform': 'GitHub',
-      'analysis_date': new Date().toISOString()
+      'analysis_date': new Date().toISOString(),
+      'selected_year': analysisYear
     });
     
     // Track analysis start
@@ -146,7 +149,7 @@ const App: React.FC = () => {
     }
     
     try {
-      const fetchedStats = await fetchGitHubData(user); // Remove token parameter
+      const fetchedStats = await fetchGitHubData(user, analysisYear);
       setStats(fetchedStats);
       
       const fetchedInsights = await generateAIWrapped(fetchedStats, activeModel);

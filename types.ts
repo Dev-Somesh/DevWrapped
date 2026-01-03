@@ -33,6 +33,8 @@ export interface GitHubStats {
   bio?: string;
   company?: string;
   location?: string;
+  // AEO: Analysis year for AI context
+  analysisYear?: number;
 }
 
 export interface AIInsights {

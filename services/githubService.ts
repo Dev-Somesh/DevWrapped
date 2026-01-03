@@ -107,17 +107,22 @@ const fetchAllRepos = async (username: string): Promise<any[]> => {
 /**
  * Centralized contribution calculation to ensure consistency across all sections
  */
-const calculateContributionStats = (events: any[], repos: any[]) => {
-  const year2025Start = new Date('2025-01-01');
+const calculateContributionStats = (events: any[], repos: any[], analysisYear: number) => {
+  // Use selected year instead of current year
+  const yearStart = new Date(`${analysisYear}-01-01`);
+  const yearEnd = new Date(`${analysisYear}-12-31`);
   const today = new Date();
   
-  // Filter events for 2025 only
-  const events2025 = events.filter(event => {
+  // For current year, don't go beyond today
+  const endDate = analysisYear === new Date().getFullYear() ? today : yearEnd;
+  
+  // Filter events for selected year only
+  const eventsThisYear = events.filter(event => {
     const eventDate = new Date(event.created_at);
-    return eventDate >= year2025Start && eventDate <= today;
+    return eventDate >= yearStart && eventDate <= endDate;
   });
   
-  console.log(`Calculating stats from ${events2025.length} events in 2025`);
+  console.log(`Calculating stats from ${eventsThisYear.length} events in ${analysisYear}`);
   
   // Count different types of contributions consistently
   let totalContributions = 0;
@@ -125,7 +130,7 @@ const calculateContributionStats = (events: any[], repos: any[]) => {
   const monthlyContributions = new Map<string, number>();
   const activeDaysSet = new Set<string>();
   
-  events2025.forEach(event => {
+  eventsThisYear.forEach(event => {
     const eventDate = new Date(event.created_at);
     const dateStr = eventDate.toISOString().split('T')[0];
     const monthKey = eventDate.toISOString().slice(0, 7); // YYYY-MM
@@ -167,7 +172,7 @@ const calculateContributionStats = (events: any[], repos: any[]) => {
   repos.forEach(repo => {
     if (repo.updated_at) {
       const updateDate = new Date(repo.updated_at);
-      if (updateDate >= year2025Start && updateDate <= today) {
+      if (updateDate >= yearStart && updateDate <= endDate) {
         const dateStr = updateDate.toISOString().split('T')[0];
         const monthKey = updateDate.toISOString().slice(0, 7);
         
@@ -184,10 +189,10 @@ const calculateContributionStats = (events: any[], repos: any[]) => {
   const monthlyActivity = [];
   
   for (let i = 0; i < 12; i++) {
-    const monthKey = `2025-${String(i + 1).padStart(2, '0')}`;
-    const currentMonth = new Date(2025, i, 1);
+    const monthKey = `${analysisYear}-${String(i + 1).padStart(2, '0')}`;
+    const currentMonth = new Date(analysisYear, i, 1);
     
-    if (currentMonth <= today) {
+    if (currentMonth <= endDate) {
       const count = monthlyContributions.get(monthKey) || 0;
       
       let level = 0;
@@ -210,7 +215,8 @@ const calculateContributionStats = (events: any[], repos: any[]) => {
     dailyContributions,
     monthlyContributions,
     monthlyActivity,
-    events2025: events2025.length
+    eventsThisYear: eventsThisYear.length,
+    analysisYear
   };
 };
 
@@ -218,7 +224,7 @@ const calculateContributionStats = (events: any[], repos: any[]) => {
  * Try to get more comprehensive activity data by combining multiple sources
  * and attempting to estimate missing contributions
  */
-const getEnhancedActivityData = async (username: string): Promise<any[]> => {
+const getEnhancedActivityData = async (username: string, analysisYear: number): Promise<any[]> => {
   try {
     // Try to get more comprehensive public activity from multiple endpoints
     const [publicEvents, receivedEvents, userRepos] = await Promise.all([
@@ -240,11 +246,12 @@ const getEnhancedActivityData = async (username: string): Promise<any[]> => {
     // Try to estimate additional contributions from repository data
     const recentRepos = userRepos.filter((repo: any) => {
       const updatedDate = new Date(repo.updated_at);
-      const year2025Start = new Date('2025-01-01');
-      return updatedDate >= year2025Start;
+      const yearStart = new Date(`${analysisYear}-01-01`);
+      const yearEnd = new Date(`${analysisYear}-12-31`);
+      return updatedDate >= yearStart && updatedDate <= yearEnd;
     });
     
-    // Add estimated contributions for repositories updated in 2025
+    // Add estimated contributions for repositories updated in selected year
     // This helps account for activity not captured in events
     const estimatedRepoContributions = recentRepos.map((repo: any) => ({
       id: `repo-${repo.id}`,
@@ -261,14 +268,18 @@ const getEnhancedActivityData = async (username: string): Promise<any[]> => {
     return [];
   }
 };
-const fetchYearEvents = async (username: string): Promise<any[]> => {
+const fetchYearEvents = async (username: string, analysisYear: number): Promise<any[]> => {
   let allEvents: any[] = [];
   let page = 1;
   const perPage = 100;
-  const year2025Start = new Date('2025-01-01');
+  const yearStart = new Date(`${analysisYear}-01-01`);
+  const yearEnd = new Date(`${analysisYear}-12-31`);
   const today = new Date();
   
-  console.log(`Fetching public events for ${username} from 2025-01-01 to ${today.toISOString().split('T')[0]}`);
+  // For current year, don't go beyond today
+  const endDate = analysisYear === new Date().getFullYear() ? today : yearEnd;
+  
+  console.log(`Fetching public events for ${username} from ${analysisYear}-01-01 to ${endDate.toISOString().split('T')[0]}`);
   
   while (true) {
     const events = await fetchViaProxy(
@@ -282,20 +293,20 @@ const fetchYearEvents = async (username: string): Promise<any[]> => {
       break;
     }
     
-    // Filter events for 2025 only
-    const events2025 = events.filter((event: any) => {
+    // Filter events for selected year only
+    const eventsThisYear = events.filter((event: any) => {
       const eventDate = new Date(event.created_at);
-      return eventDate >= year2025Start && eventDate <= today;
+      return eventDate >= yearStart && eventDate <= endDate;
     });
     
-    console.log(`Page ${page}: Found ${events.length} total events, ${events2025.length} from 2025`);
+    console.log(`Page ${page}: Found ${events.length} total events, ${eventsThisYear.length} from ${analysisYear}`);
     
-    allEvents = allEvents.concat(events2025);
+    allEvents = allEvents.concat(eventsThisYear);
     
-    // If we found events older than 2025, we can stop
+    // If we found events older than selected year, we can stop
     const oldestEventDate = new Date(events[events.length - 1].created_at);
-    if (oldestEventDate < year2025Start) {
-      console.log(`Reached events before 2025 (${oldestEventDate.toISOString().split('T')[0]}), stopping`);
+    if (oldestEventDate < yearStart) {
+      console.log(`Reached events before ${analysisYear} (${oldestEventDate.toISOString().split('T')[0]}), stopping`);
       break;
     }
     
@@ -314,27 +325,28 @@ const fetchYearEvents = async (username: string): Promise<any[]> => {
     }
   }
   
-  console.log(`Fetched ${allEvents.length} public events from 2025 across ${page} pages`);
+  console.log(`Fetched ${allEvents.length} public events from ${analysisYear} across ${page} pages`);
   return allEvents;
 };
 
-export const fetchGitHubData = async (username: string): Promise<GitHubStats> => {
+export const fetchGitHubData = async (username: string, selectedYear?: number): Promise<GitHubStats> => {
   const startTime = Date.now();
+  const analysisYear = selectedYear || new Date().getFullYear();
 
   try {
     // Debug logging
-    console.log('fetchGitHubData called with:', { username });
+    console.log('fetchGitHubData called with:', { username, analysisYear });
     
     // STEP 1: Fetch user data first
     const userData = await fetchViaProxy(`/users/${username}`, username, 5000);
     const user = userData;
     
     // STEP 2: Fetch repositories and enhanced activity data in parallel
-    console.log('Fetching public repositories and enhanced 2025 activity...');
+    console.log(`Fetching public repositories and enhanced ${analysisYear} activity...`);
     const [repos, basicEvents, enhancedEvents] = await Promise.all([
       fetchAllRepos(username),
-      fetchYearEvents(username),
-      getEnhancedActivityData(username)
+      fetchYearEvents(username, analysisYear),
+      getEnhancedActivityData(username, analysisYear)
     ]);
     
     // Combine all events and remove duplicates
@@ -345,10 +357,12 @@ export const fetchGitHubData = async (username: string): Promise<GitHubStats> =>
     
     const events = uniqueEvents.filter(event => {
       const eventDate = new Date(event.created_at);
-      return eventDate >= new Date('2025-01-01') && eventDate <= new Date();
+      const yearStart = new Date(`${analysisYear}-01-01`);
+      const yearEnd = new Date(`${analysisYear}-12-31`);
+      return eventDate >= yearStart && eventDate <= yearEnd;
     });
     
-    console.log(`Data fetched: ${repos.length} repos, ${events.length} unique events from 2025`);
+    console.log(`Data fetched: ${repos.length} repos, ${events.length} unique events from ${analysisYear}`);
 
     // Check if we're running out of time
     if (Date.now() - startTime > CLIENT_TIMEOUT_MS - 2000) {
@@ -357,7 +371,7 @@ export const fetchGitHubData = async (username: string): Promise<GitHubStats> =>
 
     // CENTRALIZED CONTRIBUTION CALCULATION
     // This ensures all sections show the same numbers
-    const contributionStats = calculateContributionStats(events, repos);
+    const contributionStats = calculateContributionStats(events, repos, analysisYear);
     
     console.log('Centralized contribution stats:', contributionStats);
     const recentRepos: GitHubRepo[] = repos.slice(0, 5).map((repo: any) => ({
@@ -499,10 +513,10 @@ export const fetchGitHubData = async (username: string): Promise<GitHubStats> =>
     // Use a shorter timeout since we already have most data
     let totalCommits = 0;
     try {
-      // Search for commits from 2025-01-01 to today (public repos only)
+      // Search for commits from selected year (public repos only)
       const commitSearchResult = await Promise.race([
         fetchViaProxy(
-          `/search/commits?q=author:${username}+committer-date:>=2025-01-01&per_page=1`,
+          `/search/commits?q=author:${username}+committer-date:>=${analysisYear}-01-01&per_page=1`,
           username,
           5000 // Shorter timeout - this is the slowest endpoint
         ),
@@ -512,7 +526,7 @@ export const fetchGitHubData = async (username: string): Promise<GitHubStats> =>
       ]) as any;
       
       totalCommits = commitSearchResult?.total_count || 0;
-      console.log(`Found ${totalCommits} total commits in 2025 via search API`);
+      console.log(`Found ${totalCommits} total commits in ${analysisYear} via search API`);
     } catch (commitError) {
       // Commit search failed - estimate from events data
       console.warn('Commit search timed out, using estimate from events:', commitError);
@@ -536,8 +550,8 @@ export const fetchGitHubData = async (username: string): Promise<GitHubStats> =>
       activeDays: contributionStats.activeDays,
       currentStreak,
       longestStreak,
-      eventsAnalyzed: contributionStats.events2025,
-      dateRange: `2025-01-01 to ${new Date().toISOString().split('T')[0]}`
+      eventsAnalyzed: contributionStats.eventsThisYear,
+      dateRange: `${contributionStats.analysisYear}-01-01 to ${new Date().toISOString().split('T')[0]}`
     });
 
     return {
@@ -554,7 +568,7 @@ export const fetchGitHubData = async (username: string): Promise<GitHubStats> =>
       streak: currentStreak,
       longestStreak,
       mostActiveMonth,
-      firstActivity: '2025-01-01',
+      firstActivity: `${analysisYear}-01-01`,
       lastActivity: activeDaysArray[0] || new Date().toISOString().split('T')[0],
       activityPattern,
       contributionGrid: contributionStats.monthlyActivity, // Use centralized monthly data
@@ -566,6 +580,8 @@ export const fetchGitHubData = async (username: string): Promise<GitHubStats> =>
       bio: user.bio || undefined,
       company: user.company || undefined,
       location: user.location || undefined,
+      // AEO: Include analysis year for AI context
+      analysisYear: analysisYear,
     };
   } catch (error: any) {
     console.error("GitHub Telemetry Fault:", error);

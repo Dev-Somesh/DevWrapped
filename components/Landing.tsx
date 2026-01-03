@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { trackEvent } from '../services/mixpanelService';
+import { calculateYearAvailability, getYearDisplayInfo } from '../utils/dateUtils';
 
 interface LandingProps {
-  onConnect: (username: string) => void; // Remove token parameter
+  onConnect: (username: string, selectedYear?: number) => void;
   error: string | null;
 }
 
@@ -192,18 +193,31 @@ const FeaturePreview: React.FC<{
 
 const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
   const [username, setUsername] = useState('');
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  
+  // Calculate year availability based on current date
+  const yearAvailability = useMemo(() => calculateYearAvailability(), []);
+  
+  // Set default year selection
+  useEffect(() => {
+    if (selectedYear === null) {
+      setSelectedYear(yearAvailability.currentYear);
+    }
+  }, [yearAvailability.currentYear, selectedYear]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username.trim()) {
+    if (username.trim() && selectedYear) {
       // Track form submission
       trackEvent('Form Submitted', {
         form_type: 'github_username',
         username: username.trim(),
+        selected_year: selectedYear,
+        year_selection_available: yearAvailability.canShowYearSelection,
         page_url: window.location.href
       });
       
-      onConnect(username.trim()); // Remove token parameter
+      onConnect(username.trim(), selectedYear);
     }
   };
 
@@ -398,6 +412,63 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
                   </span>
                 </p>
               </div>
+
+              {/* Year Selection - Only show if multiple years available */}
+              {yearAvailability.canShowYearSelection && (
+                <div className="space-y-3 text-left">
+                  <label className="text-[9px] md:text-[10px] font-mono text-[#484f58] uppercase tracking-[0.2em] md:tracking-[0.3em] ml-3 md:ml-4 font-black">Analysis Year</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {yearAvailability.availableYears.map((year) => {
+                      const yearInfo = getYearDisplayInfo(year);
+                      return (
+                        <button
+                          key={year}
+                          type="button"
+                          onClick={() => {
+                            setSelectedYear(year);
+                            trackEvent('Year Selected', {
+                              selected_year: year,
+                              is_current_year: yearInfo.isCurrentYear,
+                              data_quality: yearInfo.dataQuality,
+                              page_url: window.location.href
+                            });
+                          }}
+                          className={`p-3 rounded-xl border transition-all text-left ${
+                            selectedYear === year
+                              ? 'bg-[#39d353]/10 border-[#39d353] text-[#39d353]'
+                              : 'bg-[#0d1117] border-[#30363d] text-[#8b949e] hover:border-[#39d353]/50'
+                          }`}
+                        >
+                          <div className="font-bold text-sm">{year}</div>
+                          <div className="text-[10px] opacity-70 mt-1">
+                            {yearInfo.dataQuality === 'partial' && '📊 Partial data'}
+                            {yearInfo.dataQuality === 'mixed' && '🔀 Mixed data'}
+                            {yearInfo.dataQuality === 'full' && '✅ Full data'}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-2 ml-3 md:ml-4 text-[8px] md:text-[9px] font-mono text-[#6e7681] leading-relaxed">
+                    ⚠️ {yearAvailability.dataLimitation}
+                  </p>
+                </div>
+              )}
+
+              {/* Data Limitation Warning - Always show */}
+              {yearAvailability.canShowCurrentYearOnly && (
+                <div className="space-y-2 text-left">
+                  <div className="p-3 rounded-xl bg-[#d29922]/10 border border-[#d29922]/20 text-[#d29922]">
+                    <div className="flex items-center gap-2 text-xs font-bold">
+                      <span>⚠️</span>
+                      <span>Data Limitation Notice</span>
+                    </div>
+                    <p className="text-[10px] mt-1 opacity-80">
+                      {yearAvailability.dataLimitation}
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {error && (
                 <div className="p-4 rounded-xl bg-red-900/10 border border-red-500/20 text-red-400 text-xs animate-shake flex flex-col gap-2">

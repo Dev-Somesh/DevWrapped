@@ -126,7 +126,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
       
       // Fixed responsive card dimensions - increased size for new content
       const cardWidth = 480;
-      const cardHeight = 720; // Increased from 600 to 720 for "Why This Archetype" section
+      const cardHeight = 740; // Increased from 720 to 740 for disclaimer
       
       // Calculate scale based on both width and height constraints
       const widthScale = availableWidth / cardWidth;
@@ -285,7 +285,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
           <div 
             className="relative flex items-center justify-center transition-all duration-700 ease-in-out w-full max-w-lg md:max-w-none"
             style={{ 
-              height: `${720 * scale}px`,
+              height: `${740 * scale}px`,
               width: `${480 * scale}px`,
               maxWidth: '100vw',
               transformOrigin: 'top center'
@@ -296,7 +296,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
               className={`absolute inset-0 bg-[#0d1117] rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 lg:p-10 overflow-hidden border border-[#30363d] shadow-[0_40px_80px_-20px_rgba(0,0,0,1)] flex flex-col`}
               style={{ 
                 width: '480px',
-                height: '720px'
+                height: '740px'
               }}
             >
               {/* Background GitHub Logos */}
@@ -437,6 +437,13 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
                   ))}
                 </div>
               </div>
+
+              {/* Data Accuracy Disclaimer */}
+              <div className="relative z-20 mt-2 text-center">
+                <p className="text-[7px] font-mono text-[#6e7681] opacity-60 leading-tight">
+                  ⚠️ Based on public GitHub data (~90 days). Actual contributions may be higher.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -506,7 +513,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
                  ) : (
                    <Octicon className="w-6 h-6">{Icons.GitHub}</Octicon>
                  )}
-                 {isExporting ? 'EXPORTING...' : 'EXPORT MY YEAR'}
+                 {isExporting ? 'EXPORTING...' : 'EXPORT MY CODE JOURNEY'}
                </button>
 
                {/* Copy Personalized Text */}

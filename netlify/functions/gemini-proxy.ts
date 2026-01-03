@@ -2,6 +2,11 @@ import { Handler } from '@netlify/functions';
 import { GoogleGenAI, Type } from '@google/genai';
 
 export const handler: Handler = async (event, context) => {
+  // AEO: Initialize performance tracking
+  let startTime = Date.now();
+  let stats: any = null;
+  let modelName: string = '';
+
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -42,7 +47,9 @@ export const handler: Handler = async (event, context) => {
   }
 
   try {
-    const { stats, modelName } = JSON.parse(event.body || '{}');
+    const requestData = JSON.parse(event.body || '{}');
+    stats = requestData.stats;
+    modelName = requestData.modelName;
 
     if (!stats) {
       return {
@@ -53,62 +60,131 @@ export const handler: Handler = async (event, context) => {
 
     const ai = new GoogleGenAI({ apiKey });
 
+    // AEO: Performance monitoring
+    startTime = Date.now();
+    console.log('AEO: Starting AI analysis', {
+      username: stats.username,
+      model: modelName || 'gemini-3-flash-preview',
+      totalCommits: stats.totalCommits,
+      activeDays: stats.activeDays,
+      analysisYear: stats.analysisYear || new Date().getFullYear()
+    });
+
+    // AEO: Dynamic year-aware prompt generation
+    const currentYear = new Date().getFullYear();
+    const analysisYear = stats.analysisYear || currentYear;
+    const isCurrentYear = analysisYear === currentYear;
+    const yearContext = isCurrentYear ? 
+      `current ${analysisYear} activity (partial year data)` : 
+      `complete ${analysisYear} development year`;
+
+    // AEO: Enhanced context-aware prompt with dynamic insights
     const prompt = `
-    Analyze this developer's 2024-2025 GitHub activity. Create a comprehensive "Year Wrapped" analysis with explainable insights and forward-looking guidance.
+    You are an expert developer analyst creating a comprehensive "${analysisYear} Year Wrapped" report. Analyze this developer's GitHub activity with deep behavioral insights and forward-looking guidance.
+    
+    ANALYSIS CONTEXT:
+    - Target Year: ${analysisYear} (${yearContext})
+    - Data Quality: ${isCurrentYear ? 'Partial year + GitHub API 90-day limitation' : 'Historical data with API limitations'}
+    - Analysis Date: ${new Date().toISOString().split('T')[0]}
     
     DEVELOPER TELEMETRY:
-    - User: ${stats.username}
-    - Contributions: ${stats.totalCommits}
-    - Active Span: ${stats.activeDays} days
-    - Focus Stack: ${stats.topLanguages.map((l: any) => l.name).join(', ')}
-    - Scope: ${stats.reposContributed} repositories
-    - Momentum: ${stats.streak} day streak
-    - Seasonality: Peak work in ${stats.mostActiveMonth}
+    - Username: ${stats.username}
+    - Total Contributions: ${stats.totalCommits} (commits, PRs, issues, reviews)
+    - Active Development Days: ${stats.activeDays} days
+    - Technology Stack: ${stats.topLanguages.map((l: any) => `${l.name} (${l.count} repos)`).join(', ')}
+    - Repository Scope: ${stats.reposContributed} total repositories
+    - Current Streak: ${stats.streak} consecutive days
+    - Longest Streak: ${stats.longestStreak} days
+    - Peak Activity Month: ${stats.mostActiveMonth}
     - Activity Pattern: ${stats.activityPattern}
-    - Account Age: ${stats.accountAge} years
-    - Social: ${stats.followers} followers, ${stats.following} following
+    - Account Maturity: ${stats.accountAge} years on GitHub
+    - Community Engagement: ${stats.followers} followers, ${stats.following} following
+    - Stars Received: ${stats.totalStarsReceived} across all repositories
+    - New Repositories: ${stats.reposCreatedThisYear} created in ${analysisYear}
+    - Profile Context: ${stats.bio ? `"${stats.bio}"` : 'No bio'} | ${stats.company || 'No company'} | ${stats.location || 'No location'}
     
-    OUTPUT SCHEMA (JSON ONLY):
-    1. archetype: A bold developer persona (e.g., "The Architect", "The Explorer", "The Craftsperson")
-    2. archetypeDescription: A poetic 1-sentence definition
-    3. archetypeExplanation: {
-       reasoning: [3 specific reasons why they got this archetype],
-       keyFactors: [3 objects with {factor: "High repo breadth", evidence: "Contributed to ${stats.reposContributed} repositories"}],
-       confidence: number between 0.7-1.0
+    ADVANCED BEHAVIORAL ANALYSIS:
+    - Contribution Distribution: ${stats.contributionGrid ? stats.contributionGrid.map(m => `${m.month}: ${m.count} (level ${m.level})`).join(', ') : 'Not available'}
+    - Recent Projects: ${stats.recentRepos.map(r => `${r.name} (${r.language}, ${r.stars} stars)`).join(', ')}
+    
+    OUTPUT REQUIREMENTS (STRICT JSON FORMAT):
+    {
+      "archetype": "A compelling developer persona title",
+      "archetypeDescription": "One poetic sentence defining their essence",
+      "archetypeExplanation": {
+        "reasoning": ["3 data-driven reasons for this archetype"],
+        "keyFactors": [
+          {"factor": "Specific behavioral trait", "evidence": "Concrete data point"},
+          {"factor": "Development pattern", "evidence": "Supporting metric"},
+          {"factor": "Technical characteristic", "evidence": "Quantified evidence"}
+        ],
+        "confidence": 0.85
+      },
+      "executiveSummary": "Two-sentence TL;DR of their ${analysisYear} development journey",
+      "insights": [
+        "Specific behavioral insight from their coding patterns",
+        "Technical growth observation with data backing",
+        "Collaboration or productivity insight"
+      ],
+      "patterns": [
+        "High-level development rhythm or habit",
+        "Technical or temporal pattern in their work"
+      ],
+      "narrative": "Three compelling paragraphs telling their ${analysisYear} story. Use \\n\\n between paragraphs. Make it personal, data-driven, and inspiring. Reference specific metrics and achievements.",
+      "cardInsight": "Punchy 8-12 word quote perfect for social media sharing",
+      "forwardLooking": {
+        "recommendations": [
+          "Actionable suggestion based on their patterns",
+          "Growth opportunity aligned with their strengths",
+          "Technical or career advancement recommendation"
+        ],
+        "risks": [
+          "Potential burnout or stagnation risk to monitor",
+          "Skill gap or development challenge to address"
+        ],
+        "opportunities": [
+          "Emerging technology or domain to explore",
+          "Community or collaboration opportunity"
+        ]
+      }
     }
-    4. executiveSummary: A 2-sentence TL;DR of their year
-    5. insights: 3 specific behavioral traces from their code activity
-    6. patterns: 2 high-level development rhythms detected
-    7. narrative: A well-formatted 3-paragraph story with line breaks using \\n\\n
-    8. cardInsight: A punchy 10-word quote for social sharing
-    9. forwardLooking: {
-       recommendations: [3 actionable suggestions for next year],
-       risks: [2 potential burnout/growth risks to watch],
-       opportunities: [2 growth opportunities based on their patterns]
-    }
     
-    ARCHETYPE EXAMPLES & LOGIC:
-    - "The Architect": High repo breadth + consistent patterns + complex languages
-    - "The Explorer": Many languages + diverse projects + experimental commits
-    - "The Craftsperson": Deep focus + quality over quantity + refined stack
-    - "The Collaborator": High social metrics + team-oriented repos + consistent activity
-    - "The Innovator": New repos created + cutting-edge stack + burst patterns
-    - "The Maintainer": Long streaks + steady patterns + established projects
+    ARCHETYPE SELECTION LOGIC (Choose most fitting):
+    - "The Architect": High repo breadth (15+) + consistent patterns + complex languages (TypeScript, Rust, Go)
+    - "The Explorer": 4+ languages + diverse projects + experimental activity
+    - "The Craftsperson": Deep focus + quality over quantity + refined tech stack
+    - "The Collaborator": High social metrics + team repos + consistent contributions
+    - "The Innovator": New repos created + cutting-edge stack + burst activity patterns
+    - "The Maintainer": Long streaks (30+) + steady patterns + established projects
+    - "The Specialist": Deep expertise in 1-2 languages + focused domain
+    - "The Builder": High commit volume + multiple active projects + creation-focused
+    - "The Contributor": Open source focus + community engagement + diverse contributions
+    - "The Learner": Rapid skill acquisition + educational repos + growth trajectory
     
-    FORWARD-LOOKING GUIDANCE RULES:
-    - Base recommendations on their actual patterns
-    - Identify realistic risks (burnout, skill gaps, isolation)
-    - Suggest concrete opportunities (new technologies, collaboration, specialization)
-    - Keep advice actionable and specific to their profile
+    QUALITY STANDARDS:
+    - Use specific numbers and metrics in explanations
+    - Make archetype feel earned and trustworthy
+    - Ensure narrative flows naturally and tells a compelling story
+    - Base all insights on actual data patterns
+    - Keep recommendations actionable and personalized
+    - Reference ${analysisYear} context throughout
     
-    TONE: Professional, insightful, data-driven but human. Make the archetype explanation feel earned and trustworthy.
+    TONE: Professional yet engaging, data-driven but human, celebratory of achievements while providing constructive guidance.
   `;
 
+    // AEO: Advanced model configuration for optimal performance
     const response = await ai.models.generateContent({
       model: modelName || 'gemini-3-flash-preview',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
+        // AEO: Optimized generation parameters
+        temperature: 0.7, // Balanced creativity vs consistency
+        topK: 40, // Focused vocabulary selection
+        topP: 0.9, // High-quality token sampling
+        maxOutputTokens: 4096, // Sufficient for detailed analysis
+        candidateCount: 1, // Single high-quality response
+        stopSequences: [], // No early stopping
         responseSchema: {
           type: Type.OBJECT,
           properties: {
@@ -157,31 +233,74 @@ export const handler: Handler = async (event, context) => {
       };
     }
 
+    // AEO: Performance logging and quality validation
+    const endTime = Date.now();
+    const processingTime = endTime - startTime;
+    
+    console.log('AEO: AI analysis completed', {
+      username: stats.username,
+      processingTimeMs: processingTime,
+      responseLength: response.text.length,
+      model: modelName || 'gemini-3-flash-preview'
+    });
+
+    // AEO: Response quality validation
+    try {
+      const parsedResponse = JSON.parse(response.text);
+      if (!parsedResponse.archetype || !parsedResponse.narrative || !parsedResponse.forwardLooking) {
+        console.warn('AEO: Response quality issue - missing required fields');
+      }
+    } catch (parseError) {
+      console.warn('AEO: Response parsing validation failed:', parseError);
+    }
+
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
+        // AEO: Performance headers for monitoring
+        'X-Processing-Time': processingTime.toString(),
+        'X-AI-Model': modelName || 'gemini-3-flash-preview',
       },
       body: response.text,
     };
   } catch (error: any) {
-    console.error('Gemini API Error:', error);
+    // AEO: Enhanced error logging and analysis
+    const endTime = Date.now();
+    const processingTime = endTime - startTime;
+    
+    console.error('AEO: Gemini API Error', {
+      error: error.message,
+      username: stats?.username || 'unknown',
+      model: modelName || 'gemini-3-flash-preview',
+      processingTimeMs: processingTime,
+      errorType: error.name || 'Unknown',
+      stack: error.stack
+    });
+    
     const errorMessage = error.message || '';
 
     let statusCode = 500;
     let errorResponse = `GEMINI_INTERNAL_ERROR: ${errorMessage || 'Session failed to initialize.'}`;
 
+    // AEO: Enhanced error classification and handling
     if (errorMessage.includes('API_KEY_INVALID') || errorMessage.includes('key') || errorMessage.includes('401')) {
       statusCode = 401;
       errorResponse = 'GEMINI_AUTH_INVALID: The API Key is unauthorized. Please check Netlify environment variables.';
-    } else if (errorMessage.includes('429') || errorMessage.includes('QUOTA')) {
+    } else if (errorMessage.includes('429') || errorMessage.includes('QUOTA') || errorMessage.includes('rate limit')) {
       statusCode = 429;
       errorResponse = 'GEMINI_RATE_LIMIT: Model quota exceeded. Please wait a few seconds before retrying.';
-    } else if (errorMessage.includes('SAFETY')) {
+    } else if (errorMessage.includes('SAFETY') || errorMessage.includes('blocked')) {
       statusCode = 400;
       errorResponse = 'GEMINI_SAFETY_BLOCK: The intelligence core filtered this user\'s profile content for safety.';
+    } else if (errorMessage.includes('timeout') || errorMessage.includes('TIMEOUT')) {
+      statusCode = 408;
+      errorResponse = 'GEMINI_TIMEOUT: AI analysis timed out. Please try again with a simpler request.';
+    } else if (errorMessage.includes('token') || errorMessage.includes('length')) {
+      statusCode = 413;
+      errorResponse = 'GEMINI_TOKEN_LIMIT: Request too large. Please try with fewer repositories or simpler data.';
     }
 
     return {
@@ -189,6 +308,10 @@ export const handler: Handler = async (event, context) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
+        // AEO: Error diagnostic headers
+        'X-Error-Type': error.name || 'Unknown',
+        'X-Processing-Time': processingTime.toString(),
+        'X-AI-Model': modelName || 'gemini-3-flash-preview',
       },
       body: JSON.stringify({ error: errorResponse }),
     };
