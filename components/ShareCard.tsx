@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 import { GitHubStats, AIInsights } from '../types';
 import { generateSecureTraceId } from '../services/security';
-import { trackEvent } from '../services/mixpanelService';
+import { trackEvent, trackFeatureEngagement } from '../services/mixpanelService';
 
 interface ShareCardProps {
   stats: GitHubStats;
@@ -51,6 +51,12 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
       total_commits: stats.totalCommits,
       active_days: stats.activeDays,
       page_url: window.location.href
+    });
+
+    // Track feature engagement
+    trackFeatureEngagement('share_card', 'viewed', {
+      user_id: stats.username,
+      archetype: insights.archetype
     });
 
     if (typeof window !== 'undefined' && (window as any).clarity) {
@@ -611,6 +617,15 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
                    href="https://www.instagram.com/"
                    target="_blank"
                    rel="noreferrer"
+                   onClick={() => {
+                     // Track Instagram click with Mixpanel
+                     trackEvent('Social Platform Opened', {
+                       platform: 'instagram',
+                       user_id: stats.username,
+                       archetype: insights.archetype,
+                       page_url: window.location.href
+                     });
+                   }}
                    className="flex flex-col items-center gap-1 p-3 bg-[#E4405F]/10 hover:bg-[#E4405F]/20 border border-[#E4405F]/20 hover:border-[#E4405F] rounded-lg text-[#E4405F] hover:text-[#F56040] transition-all"
                    title="Open Instagram"
                  >
@@ -624,6 +639,15 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
                    href="https://reddit.com/submit"
                    target="_blank"
                    rel="noreferrer"
+                   onClick={() => {
+                     // Track Reddit click with Mixpanel
+                     trackEvent('Social Platform Opened', {
+                       platform: 'reddit',
+                       user_id: stats.username,
+                       archetype: insights.archetype,
+                       page_url: window.location.href
+                     });
+                   }}
                    className="flex flex-col items-center gap-1 p-3 bg-[#ff4500]/10 hover:bg-[#ff4500]/20 border border-[#ff4500]/20 hover:border-[#ff4500] rounded-lg text-[#ff4500] hover:text-[#ff6500] transition-all"
                    title="Open Reddit"
                  >
@@ -650,6 +674,16 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
                  href="https://www.producthunt.com/products/devwrapped-2025/reviews/new?utm_source=badge-product_review&utm_medium=badge&utm_source=badge-devwrapped-2025"
                  target="_blank"
                  rel="noopener noreferrer"
+                 onClick={() => {
+                   // Track Product Hunt review click with Mixpanel
+                   trackEvent('External Link Clicked', {
+                     link_type: 'product_hunt_review',
+                     destination: 'producthunt.com',
+                     user_id: stats.username,
+                     archetype: insights.archetype,
+                     page_url: window.location.href
+                   });
+                 }}
                  className="inline-block hover:scale-105 transition-transform"
                >
                  <img 
@@ -667,7 +701,17 @@ const ShareCard: React.FC<ShareCardProps> = ({ stats, insights, onReset }) => {
 
              <div className="mt-auto">
                <button 
-                 onClick={onReset}
+                 onClick={() => {
+                   // Track restart button click
+                   trackEvent('Analysis Restart Clicked', {
+                     user_id: stats.username,
+                     archetype: insights.archetype,
+                     page_url: window.location.href,
+                     context: 'share_card'
+                   });
+                   
+                   onReset();
+                 }}
                  className="w-full bg-transparent border border-[#30363d] text-[#8b949e] font-black py-4 rounded-full hover:bg-[#161b22] hover:text-[#f0f6fc] transition-all active:scale-[0.98] text-[11px] uppercase tracking-widest"
                >
                  Start New Analysis

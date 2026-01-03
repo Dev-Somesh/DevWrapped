@@ -4,7 +4,7 @@ import { Step, GitHubStats, AIInsights } from './types';
 import { fetchGitHubData } from './services/githubService';
 import { generateAIWrapped } from './services/geminiService';
 import { logDiagnosticData } from './services/security';
-import { trackEvent, identifyUser } from './services/mixpanelService';
+import { trackEvent, identifyUser, trackTimeOnPage, trackScrollDepth, trackSessionStart, trackSessionEnd } from './services/mixpanelService';
 import Landing from './components/Landing';
 import Loading from './components/Loading';
 // Intermediate step components removed for streamlined flow
@@ -64,15 +64,61 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeModel] = useState("gemini-3-flash-preview");
   const [showCredits, setShowCredits] = useState(false);
+  const [pageStartTime] = useState(Date.now());
 
   // Track page view on app load
   useEffect(() => {
+    // Start session tracking
+    const sessionId = trackSessionStart();
+    
     trackEvent('Page View', {
       page_url: window.location.href,
       page_title: document.title,
-      user_agent: navigator.userAgent
+      user_agent: navigator.userAgent,
+      session_id: sessionId
     });
   }, []);
+
+  // Track scroll depth on Share page
+  useEffect(() => {
+    if (step !== Step.Share) return;
+
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = Math.round((scrollTop / docHeight) * 100);
+      
+      trackScrollDepth(scrollPercent, 'share_page', {
+        user_id: stats?.username,
+        archetype: insights?.archetype
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [step, stats?.username, insights?.archetype]);
+
+  // Track time spent when leaving the page
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      trackTimeOnPage(pageStartTime, 'devwrapped_app', {
+        final_step: Step[step],
+        user_id: stats?.username,
+        completed_analysis: step === Step.Share
+      });
+      
+      trackSessionEnd({
+        final_step: Step[step],
+        user_id: stats?.username,
+        completed_analysis: step === Step.Share,
+        total_commits: stats?.totalCommits,
+        archetype: insights?.archetype
+      });
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [pageStartTime, step, stats?.username, stats?.totalCommits, insights?.archetype]);
 
   const startAnalysis = async (user: string) => {
     setStep(Step.Analysis);
@@ -267,6 +313,14 @@ const App: React.FC = () => {
                   href="https://github.com/Dev-Somesh/Dev-Wrapped"
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    trackEvent('External Link Clicked', {
+                      link_type: 'github_repo_star',
+                      destination: 'github.com',
+                      action: 'star_project',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 px-4 py-3 bg-[#21262d] hover:bg-[#30363d] border border-[#30363d] hover:border-[#58a6ff] rounded-lg transition-all group"
                 >
                   <svg className="w-4 h-4 text-[#c9d1d9] group-hover:text-[#58a6ff]" fill="currentColor" viewBox="0 0 16 16">
@@ -281,6 +335,14 @@ const App: React.FC = () => {
                   href="https://github.com/sponsors/Dev-Somesh"
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    trackEvent('External Link Clicked', {
+                      link_type: 'github_sponsor',
+                      destination: 'github.com',
+                      action: 'sponsor_click',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-pink-500/20 to-red-500/20 hover:from-pink-500/30 hover:to-red-500/30 border border-pink-500/30 hover:border-pink-400 rounded-lg transition-all group"
                 >
                   <svg className="w-4 h-4 text-pink-400 group-hover:text-pink-300" fill="currentColor" viewBox="0 0 16 16">
@@ -308,6 +370,14 @@ const App: React.FC = () => {
                   href="https://github.com/Dev-Somesh/Dev-Wrapped/issues"
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    trackEvent('External Link Clicked', {
+                      link_type: 'github_issues',
+                      destination: 'github.com',
+                      action: 'report_issues',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 text-[#8b949e] hover:text-[#58a6ff] transition-colors text-sm"
                 >
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 16 16">
@@ -320,6 +390,14 @@ const App: React.FC = () => {
                   href="https://github.com/Dev-Somesh/Dev-Wrapped/blob/main/CONTRIBUTING.md"
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    trackEvent('External Link Clicked', {
+                      link_type: 'github_contributing',
+                      destination: 'github.com',
+                      action: 'view_contributing',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 text-[#8b949e] hover:text-[#39d353] transition-colors text-sm"
                 >
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 16 16">
@@ -328,7 +406,13 @@ const App: React.FC = () => {
                   Contribute
                 </a>
                 <button
-                  onClick={() => setShowCredits(true)}
+                  onClick={() => {
+                    setShowCredits(true);
+                    trackEvent('Modal Opened', {
+                      modal_type: 'credits',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 text-[#8b949e] hover:text-[#bc8cff] transition-colors text-sm"
                 >
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 16 16">
@@ -348,6 +432,14 @@ const App: React.FC = () => {
                   href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://devwrapped.netlify.app')}`}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    trackEvent('External Link Clicked', {
+                      link_type: 'linkedin_share',
+                      destination: 'linkedin.com',
+                      action: 'share_app',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 text-[#8b949e] hover:text-[#0077b5] transition-colors text-sm"
                 >
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
@@ -359,6 +451,14 @@ const App: React.FC = () => {
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out DevWrapped - AI-powered GitHub year in review!')}&url=${encodeURIComponent('https://devwrapped.netlify.app')}`}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    trackEvent('External Link Clicked', {
+                      link_type: 'twitter_share',
+                      destination: 'twitter.com',
+                      action: 'share_app',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 text-[#8b949e] hover:text-white transition-colors text-sm"
                 >
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
@@ -370,6 +470,14 @@ const App: React.FC = () => {
                   href="https://www.producthunt.com/products/devwrapped-2025"
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    trackEvent('External Link Clicked', {
+                      link_type: 'product_hunt',
+                      destination: 'producthunt.com',
+                      action: 'view_product',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 text-[#8b949e] hover:text-[#ff6154] transition-colors text-sm"
                 >
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
@@ -388,6 +496,14 @@ const App: React.FC = () => {
                   href="https://someshbhardwaj.me"
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    trackEvent('External Link Clicked', {
+                      link_type: 'portfolio',
+                      destination: 'someshbhardwaj.me',
+                      action: 'view_portfolio',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 text-[#8b949e] hover:text-[#58a6ff] transition-colors text-sm"
                 >
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 16 16">
@@ -399,6 +515,14 @@ const App: React.FC = () => {
                   href="https://github.com/dev-somesh"
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    trackEvent('External Link Clicked', {
+                      link_type: 'github_profile',
+                      destination: 'github.com',
+                      action: 'view_profile',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 text-[#8b949e] hover:text-[#c9d1d9] transition-colors text-sm"
                 >
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 16 16">
@@ -410,6 +534,14 @@ const App: React.FC = () => {
                   href="https://www.linkedin.com/in/ersomeshbhardwaj/"
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    trackEvent('External Link Clicked', {
+                      link_type: 'linkedin_profile',
+                      destination: 'linkedin.com',
+                      action: 'view_profile',
+                      page_url: window.location.href
+                    });
+                  }}
                   className="flex items-center gap-2 text-[#8b949e] hover:text-[#0077b5] transition-colors text-sm"
                 >
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">

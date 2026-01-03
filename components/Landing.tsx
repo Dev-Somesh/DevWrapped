@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { trackEvent } from '../services/mixpanelService';
 
 interface LandingProps {
   onConnect: (username: string) => void; // Remove token parameter
@@ -195,6 +196,13 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim()) {
+      // Track form submission
+      trackEvent('Form Submitted', {
+        form_type: 'github_username',
+        username: username.trim(),
+        page_url: window.location.href
+      });
+      
       onConnect(username.trim()); // Remove token parameter
     }
   };
@@ -370,6 +378,12 @@ const Landing: React.FC<LandingProps> = ({ onConnect, error }) => {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    onFocus={() => {
+                      trackEvent('Form Field Focused', {
+                        field_type: 'github_username',
+                        page_url: window.location.href
+                      });
+                    }}
                     placeholder="GitHub Username"
                     required
                     className="w-full bg-[#0d1117] border border-[#30363d] rounded-xl md:rounded-2xl pl-12 md:pl-16 pr-4 md:pr-6 py-4 md:py-5 text-[#f0f6fc] placeholder:text-[#484f58] focus:outline-none focus:ring-4 focus:ring-[#39d353]/5 focus:border-[#39d353] transition-all text-base md:text-lg font-medium"

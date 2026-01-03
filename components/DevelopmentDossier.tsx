@@ -2,6 +2,7 @@
 import React, { useRef, useState } from 'react';
 import { toPng } from 'html-to-image';
 import { GitHubStats, AIInsights } from '../types';
+import { trackEvent } from '../services/mixpanelService';
 
 interface DevelopmentDossierProps {
   stats: GitHubStats;
@@ -49,6 +50,13 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
     if (!reportRef.current) return;
     setIsExporting(true);
     
+    // Track dossier export attempt with Mixpanel
+    trackEvent('Development Dossier Export Started', {
+      user_id: stats.username,
+      archetype: insights.archetype,
+      page_url: window.location.href
+    });
+    
     // Track dossier export attempt
     if (typeof window !== 'undefined' && (window as any).clarity) {
       (window as any).clarity('event', 'dossier_export_started', {
@@ -71,6 +79,13 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
       link.href = dataUrl;
       link.click();
       
+      // Track successful dossier export with Mixpanel
+      trackEvent('Development Dossier Export Success', {
+        user_id: stats.username,
+        archetype: insights.archetype,
+        page_url: window.location.href
+      });
+      
       // Track successful dossier export
       if (typeof window !== 'undefined' && (window as any).clarity) {
         (window as any).clarity('event', 'dossier_export_success', {
@@ -81,6 +96,15 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
     } catch (err) {
       console.error('Export failed:', err);
       window.print();
+      
+      // Track dossier export failure with Mixpanel
+      trackEvent('Error', {
+        error_type: 'Dossier Export',
+        error_message: err instanceof Error ? err.message : 'Unknown error',
+        page_url: window.location.href,
+        user_id: stats.username,
+        fallback_action: 'print'
+      });
       
       // Track dossier export failure (fallback to print)
       if (typeof window !== 'undefined' && (window as any).clarity) {
@@ -542,9 +566,60 @@ const DevelopmentDossier: React.FC<DevelopmentDossierProps> = ({ stats, insights
               <div className="space-y-1">
                 <p className="text-2xl font-display font-black text-white">Somesh Bhardwaj</p>
                 <div className="flex gap-5">
-                  <a href="https://github.com/Dev-Somesh" target="_blank" rel="noopener noreferrer" className="text-sm text-[#39d353] hover:underline font-mono">GitHub</a>
-                  <a href="https://www.linkedin.com/in/ersomeshbhardwaj/" target="_blank" rel="noopener noreferrer" className="text-sm text-[#58a6ff] hover:underline font-mono">LinkedIn</a>
-                  <a href="https://someshbhardwaj.me" target="_blank" rel="noopener noreferrer" className="text-sm text-purple-400 hover:underline font-mono">Portfolio</a>
+                  <a 
+                    href="https://github.com/Dev-Somesh" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    onClick={() => {
+                      trackEvent('External Link Clicked', {
+                        link_type: 'github_profile_dossier',
+                        destination: 'github.com',
+                        action: 'view_profile',
+                        context: 'development_dossier',
+                        user_id: stats.username,
+                        page_url: window.location.href
+                      });
+                    }}
+                    className="text-sm text-[#39d353] hover:underline font-mono"
+                  >
+                    GitHub
+                  </a>
+                  <a 
+                    href="https://www.linkedin.com/in/ersomeshbhardwaj/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    onClick={() => {
+                      trackEvent('External Link Clicked', {
+                        link_type: 'linkedin_profile_dossier',
+                        destination: 'linkedin.com',
+                        action: 'view_profile',
+                        context: 'development_dossier',
+                        user_id: stats.username,
+                        page_url: window.location.href
+                      });
+                    }}
+                    className="text-sm text-[#58a6ff] hover:underline font-mono"
+                  >
+                    LinkedIn
+                  </a>
+                  <a 
+                    href="https://someshbhardwaj.me" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    onClick={() => {
+                      trackEvent('External Link Clicked', {
+                        link_type: 'portfolio_dossier',
+                        destination: 'someshbhardwaj.me',
+                        action: 'view_portfolio',
+                        context: 'development_dossier',
+                        user_id: stats.username,
+                        page_url: window.location.href
+                      });
+                    }}
+                    className="text-sm text-purple-400 hover:underline font-mono"
+                  >
+                    Portfolio
+                  </a>
                 </div>
               </div>
             </div>
