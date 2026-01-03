@@ -82,6 +82,8 @@ export const handler: Handler = async (event, context) => {
     const prompt = `
     You are an expert developer analyst creating a comprehensive "${analysisYear} Year Wrapped" report. Analyze this developer's GitHub activity with deep behavioral insights and forward-looking guidance.
     
+    CRITICAL: Your response MUST be valid JSON. Escape all quotes within string values using \\" and replace newlines with \\n.
+    
     ANALYSIS CONTEXT:
     - Target Year: ${analysisYear} (${yearContext})
     - Data Quality: ${isCurrentYear ? 'Partial year + GitHub API 90-day limitation' : 'Historical data with API limitations'}
@@ -106,6 +108,13 @@ export const handler: Handler = async (event, context) => {
     ADVANCED BEHAVIORAL ANALYSIS:
     - Contribution Distribution: ${stats.contributionGrid ? stats.contributionGrid.map(m => `${m.month}: ${m.count} (level ${m.level})`).join(', ') : 'Not available'}
     - Recent Projects: ${stats.recentRepos.map(r => `${r.name} (${r.language}, ${r.stars} stars)`).join(', ')}
+    
+    JSON FORMAT REQUIREMENTS:
+    - Use double quotes for all strings
+    - Escape internal quotes with \\"
+    - Replace line breaks with \\n\\n for paragraph breaks
+    - No trailing commas
+    - Ensure all brackets and braces are properly closed
     
     OUTPUT REQUIREMENTS (STRICT JSON FORMAT):
     {
@@ -168,6 +177,7 @@ export const handler: Handler = async (event, context) => {
     - Base all insights on actual data patterns
     - Keep recommendations actionable and personalized
     - Reference ${analysisYear} context throughout
+    - CRITICAL: Ensure all text content is properly escaped for JSON
     
     TONE: Professional yet engaging, data-driven but human, celebratory of achievements while providing constructive guidance.
   `;
@@ -244,14 +254,70 @@ export const handler: Handler = async (event, context) => {
       model: modelName || 'gemini-3-flash-preview'
     });
 
-    // AEO: Response quality validation
+    // AEO: Enhanced JSON validation and sanitization
+    let sanitizedResponse: string;
     try {
+      // First, try to parse the response as-is
       const parsedResponse = JSON.parse(response.text);
+      
+      // Validate required fields
       if (!parsedResponse.archetype || !parsedResponse.narrative || !parsedResponse.forwardLooking) {
         console.warn('AEO: Response quality issue - missing required fields');
       }
-    } catch (parseError) {
-      console.warn('AEO: Response parsing validation failed:', parseError);
+      
+      // Re-stringify to ensure clean JSON
+      sanitizedResponse = JSON.stringify(parsedResponse);
+      
+    } catch (parseError: any) {
+      console.error('AEO: JSON parsing failed, attempting repair:', {
+        error: parseError.message,
+        position: parseError.message.match(/position (\d+)/)?.[1],
+        responseLength: response.text.length,
+        username: stats.username
+      });
+      
+      // Attempt to repair common JSON issues
+      let repairedText = response.text;
+      
+      // Fix common issues with unescaped quotes in strings
+      repairedText = repairedText.replace(/(?<!\\)"/g, (match, offset, string) => {
+        // Check if this quote is inside a string value (not a key or structural quote)
+        const beforeQuote = string.substring(0, offset);
+        const colonCount = (beforeQuote.match(/:/g) || []).length;
+        const openBraceCount = (beforeQuote.match(/{/g) || []).length;
+        const closeBraceCount = (beforeQuote.match(/}/g) || []).length;
+        const openBracketCount = (beforeQuote.match(/\[/g) || []).length;
+        const closeBracketCount = (beforeQuote.match(/]/g) || []).length;
+        
+        // If we're likely inside a string value, escape the quote
+        if (colonCount > openBraceCount - closeBraceCount + openBracketCount - closeBracketCount) {
+          return '\\"';
+        }
+        return match;
+      });
+      
+      // Fix unescaped newlines in strings
+      repairedText = repairedText.replace(/\n(?=.*")/g, '\\n');
+      
+      try {
+        const repairedResponse = JSON.parse(repairedText);
+        sanitizedResponse = JSON.stringify(repairedResponse);
+        console.log('AEO: JSON repair successful');
+      } catch (repairError) {
+        console.error('AEO: JSON repair failed, returning error response');
+        return {
+          statusCode: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'X-Processing-Time': processingTime.toString(),
+            'X-AI-Model': modelName || 'gemini-3-flash-preview',
+          },
+          body: JSON.stringify({ 
+            error: `GEMINI_JSON_MALFORMED: ${parseError.message}. The AI response contained invalid JSON structure.` 
+          }),
+        };
+      }
     }
 
     return {
@@ -264,7 +330,7 @@ export const handler: Handler = async (event, context) => {
         'X-Processing-Time': processingTime.toString(),
         'X-AI-Model': modelName || 'gemini-3-flash-preview',
       },
-      body: response.text,
+      body: sanitizedResponse,
     };
   } catch (error: any) {
     // AEO: Enhanced error logging and analysis
